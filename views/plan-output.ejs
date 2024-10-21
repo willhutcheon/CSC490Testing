@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recommended Workout Plan</title>
+</head>
+<body>
+  <h1>Recommended Workout Plan for <%= user.fname %> <%= user.lname %></h1>
+
+  <h2>Plan Details</h2>
+  <p><strong>Fitness Goal:</strong> <%= userPreferences.fit_goal %></p>
+  <p><strong>Experience Level:</strong> <%= userPreferences.exp_level %></p>
+  <p><strong>Plan Start Date:</strong> <%= plan.start_date %></p>
+  <p><strong>Plan End Date:</strong> <%= plan.end_date %></p>
+  <p><strong>Active Plan:</strong> <%= plan.active ? "Yes" : "No" %></p>
+
+  <h2>Workouts</h2>
+  <% workouts.forEach((workout, index) => { %>
+    <div class="workout">
+      <h3>Workout <%= index + 1 %>: <%= workout.exercise_name %></h3>
+      <p><strong>Intensity:</strong> <%= workout.intensity %></p>
+      <p><strong>Duration:</strong> <%= workout.duration %> minutes</p>
+
+      <h4>Exercises</h4>
+      <ul>
+        <% workout.exercises.forEach((exercise) => { %>
+          <li>
+            <strong>Exercise Name:</strong> <%= exercise.exercise_name %> <br />
+            <strong>Sets:</strong> <%= exercise.plan_sets %> <br />
+            <strong>Reps:</strong> <%= exercise.plan_reps %> <br />
+            <strong>Weight:</strong> <%= exercise.plan_weight %> kg <br />
+            <strong>Rest Time:</strong> <%= exercise.rest_time %> seconds
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  <% }) %>
+
+  <h2>Feedback Summary</h2>
+  <p><strong>Rating:</strong> <%= feedback.rating %> / 5</p>
+  <p><strong>Total Calories Burned:</strong> <%= feedback.total_calories_burned %> kcal</p>
+
+  <h2>Submit Your Feedback</h2>
+  <form action="/feedback" method="POST">
+    <input type="hidden" name="userId" value="<%= user.user_id %>" />
+    <input type="hidden" name="workoutId" value="<%= workout.workout_id %>" />
+    <label for="rating">Rate your workout (1-5):</label>
+    <input type="number" name="rating" id="rating" min="1" max="5" required />
+
+    <label for="caloriesBurned">Calories burned (in kcal):</label>
+    <input type="number" name="caloriesBurned" id="caloriesBurned" required />
+
+    <button type="submit">Submit Feedback</button>
+  </form>
+</body>
+</html>

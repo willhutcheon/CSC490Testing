@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provide Feedback</title>
+</head>
+<body>
+    <h1>Submit Feedback for Plan ID: <%= planId %></h1>
+
+    <form action="/feedback" method="POST">
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <input type="hidden" name="planId" value="<%= planId %>">
+
+        <label for="rating">Rating (1 to 5):</label>
+        <input type="number" name="rating" min="1" max="5" required>
+
+        <label for="totalCaloriesBurned">Total Calories Burned:</label>
+        <input type="number" name="totalCaloriesBurned" required>
+
+        <button type="submit">Submit Feedback</button>
+    </form>
+</body>
+</html>
