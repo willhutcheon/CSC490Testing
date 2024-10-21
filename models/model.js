@@ -78,8 +78,10 @@ async function storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned
         ON CONFLICT (user_id, plan_id) DO UPDATE 
         SET rating = excluded.rating, total_calories_burned = excluded.total_calories_burned;
     `;
+    console.log(`Executing SQL: ${sql} with parameters: ${userId}, ${planId}, ${rating}, ${totalCaloriesBurned}`);
     return await db.run(sql, [userId, planId, rating, totalCaloriesBurned]);
 }
+
 
 // ADDDED
 async function getUserWorkoutPlans(userId) {
