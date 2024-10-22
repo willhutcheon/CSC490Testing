@@ -28,6 +28,7 @@ module.exports = router;
 // TODO: auto increment user_preferences preference_id when creating new user preferences?
 // TODO: change how next state is represented? currently current state concat with rating value
 // TODO: handling states
+// TODO: track and account for reps
 
 // db notes (may not apply as i have changed the db some)
 // similar exercises should have the same workout_id in the exercises table ie legs should all have workout_id 2
