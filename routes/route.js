@@ -22,10 +22,11 @@ module.exports = router;
 // TODO: no more cals, need to store and consider injuries
 // TODO: exercises api?
 // TODO: logging and considering plan history
-// todo: allow users to crud accounts, progress tracking, injuries / injury status and accomidations, goals and goal tracking
-// todo: allow users to crud workouts, exercises, and preferences
-// todo: consider injury status in RL
-// todo: auto increment user_preferences preference_id when creating new user preferences?
+// TODO: allow users to crud accounts, progress tracking, injuries / injury status and accomidations, goals and goal tracking
+// TODO: allow users to crud workouts, exercises, and preferences
+// TODO: consider injury status in RL
+// TODO: auto increment user_preferences preference_id when creating new user preferences?
+// TODO: change how next state is represented? currently current state concat with rating value
 
 // db notes (may not apply as i have changed the db some)
 // similar exercises should have the same workout_id in the exercises table ie legs should all have workout_id 2
