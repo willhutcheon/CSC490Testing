@@ -27,6 +27,7 @@ module.exports = router;
 // TODO: consider injury status in RL
 // TODO: auto increment user_preferences preference_id when creating new user preferences?
 // TODO: change how next state is represented? currently current state concat with rating value
+// TODO: handling states
 
 // db notes (may not apply as i have changed the db some)
 // similar exercises should have the same workout_id in the exercises table ie legs should all have workout_id 2
