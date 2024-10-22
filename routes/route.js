@@ -29,6 +29,16 @@ module.exports = router;
 // TODO: change how next state is represented? currently current state concat with rating value
 // TODO: handling states
 // TODO: track and account for reps
+// TODO: similar workouts should have same plan_id value in workouts table? action in q tables is plan id. users should have multiple of the same ->
+// -> named states but with different action values for each? ie ->
+// ->                        state              action (plan id)    q value
+//                           strengthadvanced5  1                   0.75
+//                           strengthadvanced5  2                   0.60
+//                           strengthadvanced5  3                   0.50
+// -> highest q value will be chosen as next action so action should be similar in category ie all strengthadvanced5 should be of chest workout type? so that similar category
+// -> of workout can be recommended
+
+
 
 // db notes (may not apply as i have changed the db some)
 // similar exercises should have the same workout_id in the exercises table ie legs should all have workout_id 2
