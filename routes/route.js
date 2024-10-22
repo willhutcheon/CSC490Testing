@@ -36,7 +36,7 @@ module.exports = router;
 //                           strengthadvanced5  2                   0.60
 //                           strengthadvanced5  3                   0.50
 // -> highest q value will be chosen as next action so action should be similar in category ie all strengthadvanced5 should be of chest workout type? so that similar category
-// -> of workout can be recommended
+// -> of workout can be recommended ie plan id 1 - bicep curl plan id 2 - hammer curl, plan id 3 - preacher curls
 
 
 
