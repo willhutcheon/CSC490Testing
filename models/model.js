@@ -33,6 +33,10 @@ async function getWorkoutPlans(userId) {
     // ADDED
     const rows = await db.all(sql, [userId]);
 
+    // ADDED
+    console.log('Raw SQL Result Rows:', rows);
+
+
     const plans = {};
     rows.forEach(row => {
         const planId = row.plan_id;
@@ -55,6 +59,11 @@ async function getWorkoutPlans(userId) {
             exercise_name: row.exercise_name
         });
     });
+
+
+    // ADDED
+    console.log('Structured Plans Object:', plans);
+
 
     // Convert plans object back to an array
     return Object.values(plans);

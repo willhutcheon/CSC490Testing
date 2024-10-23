@@ -46,6 +46,8 @@ module.exports = router;
 // This would add two more workouts to plan_id = 4, and the next time the workout plan is generated, it will include all three exercises: "Deadlift," "Squats," and "Bench Press."
 
 
+// added workout id 11, 12 in workouts (delete)
+
 
 // db notes (may not apply as i have changed the db some)
 // similar exercises should have the same workout_id in the exercises table ie legs should all have workout_id 2
