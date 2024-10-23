@@ -38,6 +38,13 @@ module.exports = router;
 // -> highest q value will be chosen as next action so action should be similar in category ie all strengthadvanced5 should be of chest workout type? so that similar category
 // -> of workout can be recommended ie plan id 1 - bicep curl plan id 2 - hammer curl, plan id 3 - preacher curls
 
+// to add more workouts to a plan ->
+// INSERT INTO workouts (workout_id, plan_id, exercise_name, intensity, duration)
+// VALUES 
+// (9, 4, 'Squats', 'High', 60),
+// (10, 4, 'Bench Press', 'High', 60); ->
+// This would add two more workouts to plan_id = 4, and the next time the workout plan is generated, it will include all three exercises: "Deadlift," "Squats," and "Bench Press."
+
 
 
 // db notes (may not apply as i have changed the db some)
