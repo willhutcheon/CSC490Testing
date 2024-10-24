@@ -28,6 +28,15 @@ async function getWorkoutPlans(userId) {
         JOIN exercises e ON w.workout_id = e.workout_id
         WHERE wp.user_id = ? AND wp.active = true;
     `;
+
+    // ADDED, cleaner sql for above?
+    // SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
+    // w.workout_id, e.exercise_name, w.intensity, w.duration 
+    // FROM workout_plans wp
+    // LEFT JOIN workouts w ON wp.plan_id = w.plan_id
+    // LEFT JOIN exercises e ON w.workout_id = e.workout_id
+    // WHERE wp.user_id = 3601 AND wp.active = true
+
     //return await db.all(sql, [userId]);
 
     // ADDED
@@ -291,6 +300,27 @@ function chooseAction(state, availablePlans) {
         }, null);
     }
 }
+// make above async? ex.
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1;
+    if (Math.random() < epsilon) {
+        // Exploration: choose a random workout plan
+        return availablePlans[Math.floor(Math.random() * availablePlans.length)];
+    } else {
+        // Exploitation: choose the workout plan with the highest Q-value
+        let bestAction = null;
+        let highestQValue = -Infinity;
+        for (const plan of availablePlans) {
+            const qValue = await getQValue(state, plan.plan_id); // await each Q-value fetch
+            if (!bestAction || qValue > highestQValue) {
+                bestAction = plan;
+                highestQValue = qValue;
+            }
+        }
+        return bestAction;
+    }
+} */
+
 
 // Recommend workout plans using reinforcement learning
 /* async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
