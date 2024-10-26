@@ -15,6 +15,8 @@ router.post("/feedback", controller.submitPlanFeedback);
 
 module.exports = router;
 
+
+
 // ADDED
 router.get('/users/create', (req, res) => {
     res.render('create-user', { error: null, message: null });
@@ -30,6 +32,8 @@ router.get('/preferences/create', (req, res) => {
 router.post('/preferences/create', registrationController.createPreferences);
 
 
+
+
 // TODO: add decaying epsilon so that the model explores less as it learns more from user feedback
 // TODO: individual q-values for users (done?)
 // TODO: formatting of 'state' in q_tables
@@ -39,7 +43,7 @@ router.post('/preferences/create', registrationController.createPreferences);
 // TODO: logging and considering plan history
 // TODO: allow users to crud accounts, progress tracking, injuries / injury status and accomidations, goals and goal tracking
 // TODO: allow users to crud workouts, exercises, and preferences
-// I have most of this crud stuff on the og git, need to transfer the routes over
+// I have most of this crud stuff done
 // TODO: consider injury status in RL
 // TODO: auto increment user_preferences preference_id when creating new user preferences?
 // TODO: change how next state is represented? currently current state concat with rating value
