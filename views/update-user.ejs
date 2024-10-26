@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Update User Information</h1>
+        <form action="/users/update" method="POST">
+            <input type="hidden" name="user_id" value="<%= user_id %>">
+
+            <div class="form-group">
+                <label for="fname">First Name:</label>
+                <input type="text" id="fname" name="fname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lname">Last Name:</label>
+                <input type="text" id="lname" name="lname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fit_goal">Fitness Goal:</label>
+                <input type="text" id="fit_goal" name="fit_goal" required>
+            </div>
+
+            <div class="form-group">
+                <label for="exp_level">Experience Level:</label>
+                <select id="exp_level" name="exp_level" required>
+                    <option value="">Select your experience level</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+            </div>
+
+            <button type="submit">Update User</button>
+        </form>
+
+        <% if (error) { %>
+            <p style="color: red;"><%= error %></p> <!-- Display error message if any -->
+        <% } %>
+
+        <% if (message) { %>
+            <p style="color: green;"><%= message %></p> <!-- Display success message if any -->
+        <% } %>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Preferences</title>
+    <link rel="stylesheet" href="/path/to/your/css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create User Preferences</h1>
+        
+        <% if (error) { %>
+            <div class="error-message">
+                <p><%= error %></p>
+            </div>
+        <% } %>
+
+        <% if (message) { %>
+            <div class="success-message">
+                <p><%= message %></p>
+            </div>
+        <% } %>
+
+        <form action="/preferences/create" method="POST">
+            <!-- auto increment this? -->
+            <div class="form-group">
+                <label for="preference_id">Preference ID:</label>
+                <input type="number" id="preference_id" name="preference_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="user_id">User ID:</label>
+                <input type="number" id="user_id" name="user_id" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="preferred_types">Preferred Workout Types:</label>
+                <input type="text" id="preferred_types" name="preferred_types" placeholder="e.g. cardio, strength, yoga" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="preferred_intensity">Preferred Intensity:</label>
+                <select id="preferred_intensity" name="preferred_intensity" required>
+                    <option value="" disabled selected>Select intensity</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="preferred_duration">Preferred Duration (minutes):</label>
+                <input type="number" id="preferred_duration" name="preferred_duration" min="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="preferred_exercise">Preferred Exercises:</label>
+                <input type="text" id="preferred_exercise" name="preferred_exercise" placeholder="e.g. squats, push-ups, running" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Create Preferences</button>
+        </form>
+    </div>
+</body>
+</html>

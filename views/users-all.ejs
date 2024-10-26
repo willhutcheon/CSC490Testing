@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <h1><%= title %></h1>
+    
+    <% if (users.length > 0) { %>
+        <ul>
+            <% users.forEach(user => { %>
+                <li>
+                    <strong>User ID:</strong> <%= user.user_id %> <br>
+                    <strong>First Name:</strong> <%= user.fname %> <br>
+                    <strong>Last Name:</strong> <%= user.lname %> <br>
+                    <strong>Username:</strong> <%= user.username %> <br>
+                    <strong>Email:</strong> <%= user.email %> <br>
+                    <strong>Fitness Goals:</strong> <%= user.fit_goal %> <br>
+                    <strong>Experience Level:</strong> <%= user.exp_level %> <br>
+                    <strong>Account Created On:</strong> <%= user.created_at %> <br>
+                </li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>No users found.</p>
+    <% } %>
+</body>
+</html>

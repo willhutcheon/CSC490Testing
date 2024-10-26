@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/controller");
+const crudcontroller = require("../controllers/crudcontroller");
 
 // Route to get all users
 router.get("/allusers", controller.getAllUsers);
@@ -13,6 +14,20 @@ router.get("/recommendations", controller.getRecommendedPlans);
 router.post("/feedback", controller.submitPlanFeedback);
 
 module.exports = router;
+
+// ADDED
+router.get('/users/create', (req, res) => {
+    res.render('create-user', { error: null, message: null });
+});
+router.post('/users/create', registrationController.createUser);
+router.get('/users/update/:user_id', registrationController.getUser);
+router.post('/users/update', registrationController.updateUser);
+router.get('/preferences/update/:user_id', registrationController.getPreferences);
+router.post('/preferences/update', registrationController.updatePreferences);
+router.get('/preferences/create', (req, res) => {
+    res.render('create-preferences', { error: null, message: null });
+});
+router.post('/preferences/create', registrationController.createPreferences);
 
 
 // TODO: add decaying epsilon so that the model explores less as it learns more from user feedback
