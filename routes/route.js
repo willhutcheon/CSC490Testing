@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/controller");
-const crudcontroller = require("../controllers/crudcontroller");
+const crudController = require("../controllers/crudcontroller");
 
 // Route to get all users
 router.get("/allusers", controller.getAllUsers);
@@ -21,15 +21,15 @@ module.exports = router;
 router.get('/users/create', (req, res) => {
     res.render('create-user', { error: null, message: null });
 });
-router.post('/users/create', registrationController.createUser);
-router.get('/users/update/:user_id', registrationController.getUser);
-router.post('/users/update', registrationController.updateUser);
-router.get('/preferences/update/:user_id', registrationController.getPreferences);
-router.post('/preferences/update', registrationController.updatePreferences);
+router.post('/users/create', crudController.createUser);
+router.get('/users/update/:user_id', crudController.getUser);
+router.post('/users/update', crudController.updateUser);
+router.get('/preferences/update/:user_id', crudController.getPreferences);
+router.post('/preferences/update', crudController.updatePreferences);
 router.get('/preferences/create', (req, res) => {
     res.render('create-preferences', { error: null, message: null });
 });
-router.post('/preferences/create', registrationController.createPreferences);
+router.post('/preferences/create', crudController.createPreferences);
 
 
 
