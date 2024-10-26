@@ -24,7 +24,7 @@ module.exports = router;
 // TODO: logging and considering plan history
 // TODO: allow users to crud accounts, progress tracking, injuries / injury status and accomidations, goals and goal tracking
 // TODO: allow users to crud workouts, exercises, and preferences
-// I have most of this crud stuff on the og git, need to transfer it over
+// I have most of this crud stuff on the og git, need to transfer the routes over
 // TODO: consider injury status in RL
 // TODO: auto increment user_preferences preference_id when creating new user preferences?
 // TODO: change how next state is represented? currently current state concat with rating value
