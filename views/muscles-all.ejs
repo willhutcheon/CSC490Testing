@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <h1><%= title %></h1>
+    
+    <% if (muscle.length > 0) { %>
+        <ul>
+            <% muscle.forEach(m => { %>
+                <li>
+                    <strong>Muscle Name:</strong> <%= m.muscle_name %> <br>
+                    <strong>Muscle Id:</strong> <%= m.muscle_id %> <br>
+                    <strong>Muscle Position:</strong> <%= m.muscle_position %> <br>
+                </li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        <p>No muscles found.</p>
+    <% } %>
+</body>
+</html>
