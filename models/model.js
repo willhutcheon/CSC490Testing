@@ -20,13 +20,17 @@ async function getUserPreferences(userId) {
 
 
 // Fetch active workout plans for the user, including associated workouts and exercises
+//for severe workouts just modify this
 async function getWorkoutPlans(userId) {
     const sql = `
-        SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*, e.exercise_name 
+    SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*
         FROM workout_plans wp
-        JOIN workouts w ON wp.plan_id = w.plan_id
-        JOIN exercises e ON w.workout_id = e.workout_id
-        WHERE wp.user_id = ? AND wp.active = true;
+            JOIN workouts w ON wp.plan_id = w.plan_id
+            JOIN exercises e ON w.workout_id = e.workout_id
+            LEFT JOIN muscle_workout mw ON w.workout_id = mw.workout_id
+            LEFT JOIN user_injury ui ON mw.muscle_id = ui.muscle_id
+            WHERE wp.user_id = ? AND ( wp.active = true AND ui.injury_intensity <> 'severe')
+;
     `;
 
     // ADDED, cleaner sql for above?
@@ -117,7 +121,7 @@ async function getUserWorkoutPlans(userId) {
             FROM workout_plans wp
             LEFT JOIN workouts w ON wp.plan_id = w.plan_id
             WHERE wp.user_id = ?;
-            `, 
+            `, //need add muscles to this exercise has a workout id 
             [userId], 
             (err, rows) => {
                 if (err) {
@@ -347,7 +351,7 @@ function chooseAction(state, availablePlans) {
 
 async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
     const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
-    const availablePlans = workoutPlans;
+    const availablePlans = workoutPlans;//Here or one step back
 
     // Choose a workout plan (action) based on the current state
     const recommendedPlan = chooseAction(state, availablePlans);
@@ -368,7 +372,26 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
 
     return recommendedPlan;
 }
-
+async function getAllMuscles(){
+    let sql = "SELECT * FROM muscle;";
+    return await db.all(sql);
+}
+//if the user has a mild injury the we should likely pick a lighter weight
+async function filterInjuries(workoutPlans,userID){
+    //get the users injuries
+    //get the workouts that hit these
+    //the above can be two sql statements that will be filtered by a join
+    //filter
+}
+async function getUser(user_id) {
+   let sql = `SELECT u.user_id,u.fname,u.lname,u.username,u.email,u.fit_goal,u.exp_level,u.created_at,ui.muscle_id,m.muscle_name,m.muscle_position, ui.injury_intensity
+   FROM users u
+       LEFT JOIN user_injury  ui ON ui.user_id = u.user_id
+       LEFT JOIN muscle m ON ui.muscle_id = m.muscle_id
+       WHERE u.user_id = ?
+    ;`;
+    return await db.all(sql, [user_id]);
+}
 
 
 module.exports = {
@@ -383,5 +406,7 @@ module.exports = {
     chooseAction,
     updateQValue,
     getQValue,
-    upsertQValue
+    upsertQValue,
+    getAllMuscles,
+    getUser
 };

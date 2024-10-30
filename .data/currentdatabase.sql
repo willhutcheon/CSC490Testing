@@ -57,6 +57,7 @@ INSERT INTO exercises (
                           plan_weight,
                           rest_time,
                           exercise_name
+                           
                       )
                       VALUES (
                           2,
@@ -78,6 +79,7 @@ INSERT INTO exercises (
                           plan_weight,
                           rest_time,
                           exercise_name
+                           
                       )
                       VALUES (
                           3,
@@ -99,6 +101,7 @@ INSERT INTO exercises (
                           plan_weight,
                           rest_time,
                           exercise_name
+                           
                       )
                       VALUES (
                           4,
@@ -120,10 +123,11 @@ INSERT INTO exercises (
                           plan_weight,
                           rest_time,
                           exercise_name
+                           
                       )
                       VALUES (
                           5,
-                          5,
+                          6,
                           105,
                           3,
                           15,
@@ -131,6 +135,7 @@ INSERT INTO exercises (
                           60,
                           'Stationary Bike'
                       );
+                      
 
 INSERT INTO exercises (
                           exercise_id,
@@ -141,6 +146,7 @@ INSERT INTO exercises (
                           plan_weight,
                           rest_time,
                           exercise_name
+                           
                       )
                       VALUES (
                           6,
@@ -162,6 +168,7 @@ INSERT INTO exercises (
                           plan_weight,
                           rest_time,
                           exercise_name
+                           
                       )
                       VALUES (
                           7,
@@ -183,6 +190,7 @@ INSERT INTO exercises (
                           plan_weight,
                           rest_time,
                           exercise_name
+                           
                       )
                       VALUES (
                           8,
@@ -193,6 +201,50 @@ INSERT INTO exercises (
                           10,
                           60,
                           'Bicep Curl'
+                      );
+--need tread mill
+--need concentration
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name
+                           
+                      )
+                      VALUES (
+                          9,
+                          8,
+                          109,
+                          1,
+                          0,
+                          0,
+                          0,
+                          'Cycling'
+                      );
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name
+                           
+                      )
+                      VALUES (
+                          10,
+                          13,
+                          110,
+                          3,
+                          10,
+                          25,
+                          60,
+                          'Concentration Curl'
                       );
 
 
@@ -961,6 +1013,312 @@ INSERT INTO workouts (
                          'High',
                          60
                      );
+
+INSERT INTO workouts (
+                         workout_id,
+                         plan_id,
+                         exercise_name,
+                         intensity,
+                         duration
+                     )
+                     VALUES (
+                         13,
+                         3,
+                         'Concentration Curl',
+                         'Medium',
+                         60
+                     );
+
+--We need a muscle group for injuries and for exercises
+--exercise can target multiple muscles
+CREATE TABLE IF NOT EXISTS muscle(
+    muscle_id           INT NOT NULL,
+    muscle_name         VARCHAR(50)NOT NULL,
+    muscle_position     TEXT CHECK(muscle_position IN ('left','right'))NOT NULL,
+    --intensity can be given a number 15, 10, 5
+    --super key
+    UNIQUE(muscle_position,muscle_name)
+    PRIMARY KEY(
+        muscle_id
+    )
+);
+-- a relation for exercises to muscle groups
+--as exercises can work many muslce and many muscles have different workouts
+CREATE TABLE IF NOT EXISTS muscle_workout(
+    muscle_id INT NOT NULL,
+    workout_id INT NOT NULL,
+    FOREIGN KEY(
+        muscle_id
+    )REFERENCES muscle (muscle_id) ON DELETE CASCADE,
+    FOREIGN KEY(
+        workout_id
+    )REFERENCES workout (workout_id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS user_injury (
+    muscle_id         INT NOT NULL,  
+    user_id           INT NOT NULL,
+    injury_intensity    TEXT CHECK (injury_intensity IN('severe','moderate','mild','none')) NOT NULL,
+    --intensity can be given a number 15, 10, 5
+    FOREIGN KEY(
+        muscle_id
+    )REFERENCES muscle (muscle_id) ON DELETE CASCADE,
+    FOREIGN KEY(
+        user_id
+    )REFERENCES user(user_id) ON DELETE CASCADE
+);
+INSERT INTO muscle( 
+                            muscle_id,
+                            muscle_name,
+                            muscle_position
+                        ) VALUES(
+                            1,
+                            'biceps brachii',
+                            'left'
+                        );
+INSERT INTO muscle(
+                            muscle_id,
+                            muscle_name,
+                            muscle_position
+                        ) VALUES(
+                            2,
+                            'biceps brachii',
+                            'right'
+
+                        );  
+INSERT INTO muscle(
+                            muscle_id,
+                            muscle_name,
+                            muscle_position
+                        ) VALUES(
+                            3,
+                            'rectus femorus',
+                            'left'
+                        );
+INSERT INTO muscle(
+                            muscle_id,
+                            muscle_name,
+                            muscle_position
+                        ) VALUES(
+                            4,
+                            'rectus femorus',
+                            'right'
+                        );
+--many to many connections for workouts
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            3,
+                            8
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            4,
+                            8
+                        );
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            1,
+                            7
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            2,
+                            7
+                        );
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            3,
+                            7
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            4,
+                            7
+                        );                        
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            1,
+                            2
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            2,
+                            2
+                        );
+
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            3,
+                            1
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            4,
+                            1
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            3,
+                            3
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            4,
+                            3
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            3,
+                            4
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                       )VALUES(
+                            4,
+                            4
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            3,
+                            5
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                       )VALUES(
+                            4,
+                            5
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            3,
+                            6
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            4,
+                            6
+                        );
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            1,
+                            11
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            2,
+                            11
+                        );
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            1,
+                            12
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            2,
+                            12
+                        );
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            1,
+                            13
+                        );
+
+INSERT INTO muscle_workout(
+                        muscle_id,
+                        workout_id
+                        )VALUES(
+                            2,
+                            13
+                        );
+INSERT INTO user_injury(
+                        user_id,
+                        muscle_id,
+                        injury_intensity
+                        )VALUES(
+                            9014,
+                            3,
+                            'mild'
+                        );
+INSERT INTO user_injury(
+                        user_id,
+                        muscle_id,
+                        injury_intensity
+                        )VALUES(
+                            2710,
+                            1,
+                            'severe'
+                        );
+                        --in later tests drop this one
+INSERT INTO user_injury(
+                        user_id,
+                        muscle_id,
+                        injury_intensity
+                        )VALUES(
+                            2710,
+                            2,
+                            'severe'
+                        );
 
 
 COMMIT TRANSACTION;

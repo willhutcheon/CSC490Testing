@@ -13,6 +13,11 @@ router.get("/recommendations", controller.getRecommendedPlans);
 // Route to submit feedback for a workout plan
 router.post("/feedback", controller.submitPlanFeedback);
 
+//route for muscles to see if muscles are posted
+router.get("/allmuscles",controller.getAllMuscles);
+
+router.get("/userprofile/:user_id",controller.getUser);
+
 module.exports = router;
 
 
