@@ -49,6 +49,7 @@ router.post('/preferences/create', crudController.createPreferences);
 // TODO: change how next state is represented? currently current state concat with rating value
 // TODO: handling states
 // TODO: track and account for reps
+// TODO; workout search and filtering
 // TODO: add more actions to states, same state name should have multiple actions (different action values)
 // TODO: similar workouts should have same plan_id value in workouts table? action in q tables is plan id. users should have multiple of the same ->
 // -> named states but with different action values for each? ie ->
