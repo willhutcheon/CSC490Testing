@@ -16,6 +16,19 @@ async function getAllUsers(req, res, next) {
         next(error);
     }
 }
+//req = request 
+//res = ?
+//next = ?
+
+async function getAllMuscles(req,res,next){
+    try {
+        let muscle = await model.getAllMuscles();
+        res.render("muscles-all", { muscle: muscle, title: 'All Muscles', muscles: req.muscles });
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 // Reinforcement Learning for recommending workout plans
 /* async function getRecommendedPlans(req, res, next) {
@@ -216,13 +229,30 @@ function determineNextState(currentState, feedback) {
     return currentState + feedback.rating; // This logic will likely need to be adjusted
 }
 
-
-
+//here the user is undefined
+async function getUser(req, res, next) {
+    const user_id =req.params.user_id.replace ( /[^\d.]/g, '' );//replaces user_id= so we just get the id
+    try {
+        const user = await model.getUser(user_id);
+        if (user) {
+            res.render('user-profile', { user, user_id: user.user_id, error: null, message: null });
+        } else {
+            //errstring  += user_id;
+            res.status(404).send({ error: "User not found"});
+        } 
+    } catch (err) {
+        console.error("Error fetching user:", err.message);
+        res.status(500).send({ error: "Failed to fetch user data -C" });
+        next(err);
+    }
+}
 
 
 module.exports = {
     getAllUsers,
     getRecommendedPlans,
     submitPlanFeedback,
-    determineNextState
+    determineNextState,
+    getAllMuscles,
+    getUser
 };

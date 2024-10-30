@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserProfile</title>
+</head>
+<body>
+        <ul>
+                <li>
+                    <strong>Name:</strong> <%= user[0].fname %> <%=user[0].lname %> <br>
+                    <strong>Username:</strong> <%=  user[0].username %> <br>
+                    <strong>User ID:</strong> <%=  user[0].user_id %> <br>
+                    <strong>Email:</strong> <%=  user[0].email %> <br>
+                    <strong>Fitness Goals:</strong> <%=  user[0].fit_goal %> <br>
+                    <strong>Experience Level:</strong> <%=  user[0].exp_level %> <br>
+                    <strong>Account Created On:</strong> <%=  user[0].created_at %> <br>
+                    <strong>Injuries</strong><br>
+                    <% if (user.length > 0) { %>
+                        <ul>
+                        <% user.forEach(injury => { %>
+                            <li>
+                                <%=injury.muscle_id%> <%=injury.muscle_position%> <%=injury.muscle_name%><br>
+                                <%=injury.injury_intensity%><br>
+                            </li>
+                        <% }); %>
+                        </ul>
+                    <% } else { %>
+                        <p>No Injuries Listed.</p>
+                    <% } %>
+                </li>
+        </ul>
+        <h2>Debug Output:</h2>
+    <pre>
+        <%= JSON.stringify(user, null, 2) %>
+    </pre>
+</body>
+</html>
+<!--get all users with this id then only look at their injuries-->

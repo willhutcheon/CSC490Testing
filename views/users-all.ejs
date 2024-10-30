@@ -20,6 +20,9 @@
                     <strong>Fitness Goals:</strong> <%= user.fit_goal %> <br>
                     <strong>Experience Level:</strong> <%= user.exp_level %> <br>
                     <strong>Account Created On:</strong> <%= user.created_at %> <br>
+                    <strong>Injuries</strong>
+                    <%=user.muscle_id%><%=user.muscle_position%> <%=user.muscle_name%><br>
+                    <%=user.injury_intensity%>
                 </li>
             <% }); %>
         </ul>
