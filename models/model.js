@@ -22,7 +22,7 @@ async function getUserPreferences(userId) {
 // Fetch active workout plans for the user, including associated workouts and exercises
 //for severe workouts just modify this
 async function getWorkoutPlans(userId) {
-    const sql = `
+    /* const sql = `
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*
         FROM workout_plans wp
             JOIN workouts w ON wp.plan_id = w.plan_id
@@ -30,6 +30,15 @@ async function getWorkoutPlans(userId) {
             LEFT JOIN muscle_workout mw ON w.workout_id = mw.workout_id
             LEFT JOIN user_injury ui ON mw.muscle_id = ui.muscle_id
             WHERE wp.user_id = ? AND ( wp.active = true AND ui.injury_intensity <> 'severe')
+;
+    `; */
+
+    const sql = `
+    SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*, e.exercise_name
+        FROM workout_plans wp
+            JOIN workouts w ON wp.plan_id = w.plan_id
+            JOIN exercises e ON w.workout_id = e.workout_id
+            WHERE wp.user_id = ? AND wp.active = true;
 ;
     `;
 
