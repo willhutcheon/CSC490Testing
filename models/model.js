@@ -24,13 +24,18 @@ async function getUserPreferences(userId) {
 async function getWorkoutPlans(userId) {
     /* const sql = `
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*
-        FROM workout_plans wp
-            JOIN workouts w ON wp.plan_id = w.plan_id
-            JOIN exercises e ON w.workout_id = e.workout_id
-            LEFT JOIN muscle_workout mw ON w.workout_id = mw.workout_id
-            LEFT JOIN user_injury ui ON mw.muscle_id = ui.muscle_id
-            WHERE wp.user_id = ? AND ( wp.active = true AND ui.injury_intensity <> 'severe')
-;
+        FROM users u
+        JOIN workout_plans wp ON wp.user_id = u.user_id
+        JOIN workouts w ON wp.plan_id = w.plan_id
+        JOIN exercises e ON w.workout_id = e.workout_id
+        JOIN muscle_workout mw ON w.workout_id = mw.workout_id 
+        JOIN muscle m ON m.muscle_id = mw.muscle_id
+        LEFT JOIN user_injury ui ON ui.muscle_id = m.muscle_id AND ui.user_id = u.user_id
+        WHERE wp.user_id = ? 
+        AND wp.active = true 
+        AND (ui.injury_intensity IS NULL OR ui.injury_intensity <> 'severe')
+        GROUP BY w.workout_id
+        ;
     `; */
 
     const sql = `
