@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Injury</h1>
+
+      <div class="form-group">
+        <label for="user_id">User ID:</label>
+        <input type="number" id="user_id" name="user_id" required>
+    </div>
+    <div class="form-group">
+      <label for="muscle">Injured muscle:</label>
+      <select id="muscle" name="muscle" required>
+          <option value="" disabled selected>Select muscle group injured</option>
+          <option value="biceps_brachii">biceps_brachii</option>
+          <option value="rectus femorus">rectus femorus</option>
+          
+      </select>
+  </div>
+  <div class="form-group">
+    <label for="intensity">Intensity:</label>
+    <select id="intensity" name="intensity" required>
+        <option value="" disabled selected>Select intensity level</option>
+        <option value="none">none</option>
+        <option value="mild">mild</option>
+        <option value="moderate">moderate</option>
+        <option value="severe">severe</option>
+    </select>
+</div>
+  <div class="form-group">
+    <label for="Active injury">Active injury</label>
+    <select id="Active injury" name="Active injury" required>
+        <option value="" disabled selected>Active injury</option>
+        <option value="true">True</option>
+        <option value="false">False</option>
+       
+    </select>
+</div>
+        <button type="submit" class="submit-btn">Log injury status</button>
+    </div>
+    </div>
+  </body>
+</html>
