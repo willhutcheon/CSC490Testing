@@ -35,6 +35,7 @@ router.get('/preferences/create', (req, res) => {
     res.render('create-preferences', { error: null, message: null });
 });
 router.post('/preferences/create', crudController.createPreferences);
+router.post('/injury/create', crudController.createInjury);
 
 
 
