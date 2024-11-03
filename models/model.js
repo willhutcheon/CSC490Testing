@@ -107,25 +107,29 @@ async function getWorkoutPlans(userId) {
         });*/
 
         // ADDED
-        const workout = {
-            workout_id: row.workout_id,
-            exercise_name: row.exercise_name,
-            intensity: row.intensity,
-            duration: row.duration,
-            exercises: [{
-                exercise_id: row.exercise_id,
-                api_id: row.api_id,
-                plan_sets: row.plan_sets,
-                plan_reps: row.plan_reps,
-                plan_weight: row.plan_weight,
-                rest_time: row.rest_time,
-                exercise_name: row.exercise_name
-            }]
-        };
+        let workout = plans[planId].workouts.find(w => w.workout_id === row.workout_id);
+        if (!workout) {
+            // If not, create a new workout
+            workout = {
+                workout_id: row.workout_id,
+                exercise_name: row.exercise_name,
+                intensity: row.intensity,
+                duration: row.duration,
+                exercises: []
+            };
+            plans[planId].workouts.push(workout);
+        }
 
         // Push workout to the respective plan
-        plans[planId].workouts.push(workout);
-
+        workout.exercises.push({
+            exercise_id: row.exercise_id,
+            api_id: row.api_id,
+            plan_sets: row.plan_sets,
+            plan_reps: row.plan_reps,
+            plan_weight: row.plan_weight,
+            rest_time: row.rest_time,
+            exercise_name: row.exercise_name
+        });
     });
 
 
