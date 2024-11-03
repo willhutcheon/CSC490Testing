@@ -18,7 +18,7 @@ async function getUserPreferences(userId) {
     return await db.get(sql, [userId]);
 }
 
-
+// KEEP THIS, WORKS
 // Fetch active workout plans for the user, including associated workouts and exercises
 //for severe workouts just modify this
 async function getWorkoutPlans(userId) {
@@ -38,14 +38,31 @@ async function getWorkoutPlans(userId) {
         ;
     `; */
 
-    const sql = `
+
+
+    // KEEP THIS, WORKS
+    /* const sql = `
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*, e.exercise_name
         FROM workout_plans wp
             JOIN workouts w ON wp.plan_id = w.plan_id
             JOIN exercises e ON w.workout_id = e.workout_id
             WHERE wp.user_id = ? AND wp.active = true;
 ;
+    `; */
+
+    // ADDED
+    const sql = `
+    SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
+           w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
+           e.plan_reps, e.plan_weight, e.rest_time, 
+           e.exercise_name, w.intensity, w.duration
+    FROM workout_plans wp
+        JOIN workouts w ON wp.plan_id = w.plan_id
+        JOIN exercises e ON w.workout_id = e.workout_id
+    WHERE wp.user_id = ? AND wp.active = true;
     `;
+
+
 
     // ADDED, cleaner sql for above?
     // SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
@@ -72,19 +89,43 @@ async function getWorkoutPlans(userId) {
         if (!plans[planId]) {
             plans[planId] = {
                 plan_id: planId,
+                user_id: userId, //ADDED
                 start_date: row.start_date,
                 end_date: row.end_date,
+                active: row.active, //ADDED
                 workouts: []
             };
         }
 
+        // KEEP THIS
         // Push workout to the respective plan
-        plans[planId].workouts.push({
+        /* plans[planId].workouts.push({
             workout_id: row.workout_id,
             intensity: row.intensity,
             duration: row.duration,
             exercise_name: row.exercise_name
-        });
+        });*/
+
+        // ADDED
+        const workout = {
+            workout_id: row.workout_id,
+            exercise_name: row.exercise_name,
+            intensity: row.intensity,
+            duration: row.duration,
+            exercises: [{
+                exercise_id: row.exercise_id,
+                api_id: row.api_id,
+                plan_sets: row.plan_sets,
+                plan_reps: row.plan_reps,
+                plan_weight: row.plan_weight,
+                rest_time: row.rest_time,
+                exercise_name: row.exercise_name
+            }]
+        };
+
+        // Push workout to the respective plan
+        plans[planId].workouts.push(workout);
+
     });
 
 
@@ -185,48 +226,6 @@ async function upsertQValue(userId, state, action, qValue) {
 }
 
 
-// Update Q-value based on feedback
-/* function updateQValue(state, action, reward, nextState) {
-    const learningRate = 0.1;
-    const discountFactor = 0.9;
-    const currentQ = getQValue(state, action);
-    const maxFutureQ = Math.max(...Object.values(QTable[nextState] || {}));
-    const newQ = currentQ + learningRate * (reward + discountFactor * maxFutureQ - currentQ);
-    if (!QTable[state]) QTable[state] = {};
-    QTable[state][action] = newQ;
-} */
-
-// ADDED, above works
-/* async function updateQValue(userId, state, action, reward, nextState) {
-    const learningRate = 0.1;
-    const discountFactor = 0.9;
-    const currentQ = await getQValue(userId, state, action); // Fetch the current Q-value from the database
-    const maxFutureQ = Math.max(...Object.values(QTable[nextState] || {}));
-    const newQ = currentQ + learningRate * (reward + discountFactor * maxFutureQ - currentQ);
-    // Save the new Q-value to the database
-    await upsertQValue(userId, state, action, newQ);
-} */
-/* async function updateQValue(userId, state, action, reward, nextState) {
-    const learningRate = 0.1;
-    const discountFactor = 0.9;
-    
-    const currentQ = await getQValue(userId, state, action) || 0; // Default to 0 if undefined
-    console.log(Current Q-value for User ID: ${userId}, State: ${state}, Action: ${action}: ${currentQ});
-
-    const maxFutureQ = Math.max(0, ...Object.values(QTable[nextState] || {})); // Default to 0 if empty
-    console.log(Max Future Q-value for State: ${nextState}: ${maxFutureQ});
-
-    // Ensure reward is a valid number
-    const validReward = typeof reward === 'number' && !isNaN(reward) ? reward : 0;
-    
-    const newQ = currentQ + learningRate * (validReward + discountFactor * maxFutureQ - currentQ);
-    console.log(New Q-value for User ID: ${userId}, State: ${state}, Action: ${action}: ${newQ});
-
-    console.log(Updating Q-value: User ID: ${userId}, State: ${state}, Action: ${action}, New Q-Value: ${newQ});
-    
-    // Save the new Q-value to the database
-    await upsertQValue(userId, state, action, newQ);
-} */
 
 // ADDED
 async function updateQValue(userId, state, action, reward, nextState) {
@@ -318,50 +317,8 @@ function chooseAction(state, availablePlans) {
         }, null);
     }
 }
-// make above async? ex.
-/* async function chooseAction(state, availablePlans) {
-    const epsilon = 0.1;
-    if (Math.random() < epsilon) {
-        // Exploration: choose a random workout plan
-        return availablePlans[Math.floor(Math.random() * availablePlans.length)];
-    } else {
-        // Exploitation: choose the workout plan with the highest Q-value
-        let bestAction = null;
-        let highestQValue = -Infinity;
-        for (const plan of availablePlans) {
-            const qValue = await getQValue(state, plan.plan_id); // await each Q-value fetch
-            if (!bestAction || qValue > highestQValue) {
-                bestAction = plan;
-                highestQValue = qValue;
-            }
-        }
-        return bestAction;
-    }
-} */
+// make above async?
 
-
-// Recommend workout plans using reinforcement learning
-/* async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
-    const state = userPreferences.fit_goal + userPreferences.exp_level; // State representation
-    const availablePlans = workoutPlans;
-
-    // Choose a workout plan (action) based on the current state
-    const recommendedPlan = chooseAction(state, availablePlans);
-
-    // Get feedback after the plan is completed
-    const feedback = await getUserPlanFeedback(userId, recommendedPlan.plan_id);
-    const reward = calculateReward(feedback);
-    console.log(Reward for User ID: ${userId}, Plan ID: ${recommendedPlan.plan_id}: ${reward});
-
-
-    // Update Q-value based on feedback and new state
-    // const nextState = state;
-    // ADDED
-    const nextState = state + feedback.rating; // In this case, the state may remain the same
-    updateQValue(state, recommendedPlan.plan_id, reward, nextState);
-
-    return recommendedPlan;
-} */
 
 async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
     const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
@@ -408,6 +365,21 @@ async function getUser(user_id) {
 }
 
 
+
+async function getPerformanceMetrics(planId) {
+    const query = `
+        SELECT plan_sets, plan_reps, plan_weight, rest_time
+        FROM exercises
+        WHERE workout_id IN (
+            SELECT workout_id
+            FROM workouts
+            WHERE plan_id = ?
+        );
+    `;
+    return await db.all(query, [planId]);
+}
+
+
 module.exports = {
     getAllUsers,
     getUserPreferences,
@@ -422,5 +394,7 @@ module.exports = {
     getQValue,
     upsertQValue,
     getAllMuscles,
-    getUser
+    getUser,
+
+    getPerformanceMetrics
 };
