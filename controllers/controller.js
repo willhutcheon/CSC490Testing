@@ -51,15 +51,15 @@ async function getRecommendedPlans(req, res, next) {
         }
 
         const recommendedPlan = await model.recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId);
-        /* res.render("recommendations", {
+        res.render("recommendations", {
             title: 'Recommended Workout Plans',
             plans: [recommendedPlan],
             user: { user_id: userId }
-        }); */
-        res.json({
+        });
+        /* res.json({
             status: "success",
             recommendedPlans: [recommendedPlan]
-        });
+        }); */
     } catch (error) {
         next(error);
     }
@@ -266,7 +266,7 @@ function determineNextState(currentState, feedback, performanceMetrics, userPref
     } */
 
 
-
+    console.log(`Test Current State viewing: ${currentState}`);
     console.log(`Performance Metrics in determineNextState viewing: ${JSON.stringify(performanceMetrics)}`);
     console.log(`Current State viewing: ${currentState}`);
     console.log(`Feedback viewing: ${JSON.stringify(feedback)}`);
