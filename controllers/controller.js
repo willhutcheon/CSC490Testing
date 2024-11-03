@@ -11,7 +11,8 @@ const model = require("../models/model");
 async function getAllUsers(req, res, next) {
     try {
         let users = await model.getAllUsers();
-        res.render("users-all", { users: users, title: 'All Users', user: req.user });
+        // res.render("users-all", { users: users, title: 'All Users', user: req.user });
+        res.json({ status: "success", users: users });
     } catch (error) {
         next(error);
     }
@@ -23,7 +24,8 @@ async function getAllUsers(req, res, next) {
 async function getAllMuscles(req,res,next){
     try {
         let muscle = await model.getAllMuscles();
-        res.render("muscles-all", { muscle: muscle, title: 'All Muscles', muscles: req.muscles });
+        // res.render("muscles-all", { muscle: muscle, title: 'All Muscles', muscles: req.muscles });
+        res.json({ status: "success", muscles: muscle });
     } catch (error) {
         next(error);
     }
@@ -76,10 +78,14 @@ async function getRecommendedPlans(req, res, next) {
         }
 
         const recommendedPlan = await model.recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId);
-        res.render("recommendations", {
+        /* res.render("recommendations", {
             title: 'Recommended Workout Plans',
             plans: [recommendedPlan],
             user: { user_id: userId }
+        }); */
+        res.json({
+            status: "success",
+            recommendedPlans: [recommendedPlan]
         });
     } catch (error) {
         next(error);
@@ -235,7 +241,8 @@ async function getUser(req, res, next) {
     try {
         const user = await model.getUser(user_id);
         if (user) {
-            res.render('user-profile', { user, user_id: user.user_id, error: null, message: null });
+            // res.render('user-profile', { user, user_id: user.user_id, error: null, message: null });
+            res.json({ status: "success", user: user });
         } else {
             //errstring  += user_id;
             res.status(404).send({ error: "User not found"});

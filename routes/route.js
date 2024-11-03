@@ -18,27 +18,30 @@ router.get("/allmuscles",controller.getAllMuscles);
 
 router.get("/userprofile/:user_id",controller.getUser);
 
-module.exports = router;
+//module.exports = router;
 
 
 
 // ADDED
-router.get('/users/create', (req, res) => {
+/* router.get('/users/create', (req, res) => {
     res.render('create-user', { error: null, message: null });
-});
+}); */
+
 router.post('/users/create', crudController.createUser);
 router.get('/users/update/:user_id', crudController.getUser);
-router.post('/users/update', crudController.updateUser);
+router.post('/users/update/:user_id', crudController.updateUser);
+// router.post('/users/update', crudController.updateUser);
 router.get('/preferences/update/:user_id', crudController.getPreferences);
-router.post('/preferences/update', crudController.updatePreferences);
-router.get('/preferences/create', (req, res) => {
+// router.post('/preferences/update', crudController.updatePreferences);
+router.post('/preferences/update/:user_id', crudController.updatePreferences);
+/* router.get('/preferences/create', (req, res) => {
     res.render('create-preferences', { error: null, message: null });
-});
+}); */
 router.post('/preferences/create', crudController.createPreferences);
 router.post('/injury/create', crudController.createInjury);
 
 
-
+module.exports = router;
 
 // TODO: add decaying epsilon so that the model explores less as it learns more from user feedback
 // TODO: individual q-values for users (done?)

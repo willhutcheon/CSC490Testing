@@ -99,7 +99,8 @@ async function getUser(req, res, next) {
     try {
         const user = await model.getUser(user_id);
         if (user) {
-            res.render('update-user', { user, user_id: user.user_id, error: null, message: null });
+            // res.render('update-user', { user, user_id: user.user_id, error: null, message: null });
+            res.status(200).json({ user });
         } else {
             res.status(404).send({ error: "User not found"});
         } 
@@ -115,7 +116,8 @@ async function getPreferences(req, res, next) {
         const user = await model.getUser(user_id);
         const preferences = await model.getPreferences(user_id);
         if (user && preferences) {
-            res.render('update-preferences', {user, preferences, error: null, message: null });
+            // res.render('update-preferences', {user, preferences, error: null, message: null });
+            res.status(200).json({ user, preferences });
         } else {
             res.status(404).send({ error: "User or preferences not found" });
         }
