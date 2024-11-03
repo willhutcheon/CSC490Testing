@@ -347,11 +347,24 @@ function chooseAction(state, availablePlans) {
 
     return recommendedPlan;
 } */
+async function injuryFilter(userId) {
+    const sql = `
+        SELECT wp.*
+        FROM workout_plans wp
+            JOIN workouts w ON wp.plan_id = w.plan_id
+            JOIN exercises e ON w.workout_id = e.workout_id
+            LEFT JOIN muscle_workout mw ON w.workout_id = mw.workout_id
+            LEFT JOIN user_injury ui ON mw.muscle_id = ui.muscle_id
+            WHERE wp.user_id = ? AND ( wp.active = true AND ui.injury_intensity <> 'severe')
+    `;
+    return await db.get(sql, [userId]);
+}
 
 async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
     const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
     const availablePlans = workoutPlans;//Here or one step back
-
+    //injury filter
+    //const availablePlans = injuryFilter(userId);
     // Choose a workout plan (action) based on the current state
     const recommendedPlan = chooseAction(state, availablePlans);
 
