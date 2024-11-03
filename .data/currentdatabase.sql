@@ -852,7 +852,6 @@ CREATE TABLE IF NOT EXISTS workouts (
     workout_id    INT  NOT NULL
                        UNIQUE,
     plan_id       INT  NOT NULL,
-    exercise_name TEXT NOT NULL,
     intensity     TEXT NOT NULL,
     duration      INT  NOT NULL,
     PRIMARY KEY (
@@ -867,14 +866,12 @@ CREATE TABLE IF NOT EXISTS workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          1,
                          1,
-                         'Squat',
                          'High',
                          60
                      );
@@ -882,14 +879,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          2,
                          1,
-                         'Bench Press',
                          'High',
                          60
                      );
@@ -897,14 +892,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          3,
                          2,
-                         'Running',
                          'Low',
                          30
                      );
@@ -912,14 +905,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          4,
                          2,
-                         'Treadmill',
                          'Low',
                          30
                      );
@@ -927,14 +918,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          5,
                          3,
-                         'Cycling',
                          'Medium',
                          45
                      );
@@ -942,14 +931,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          6,
                          3,
-                         'Stationary Bike',
                          'Medium',
                          45
                      );
@@ -957,14 +944,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          7,
                          4,
-                         'Deadlift',
                          'High',
                          90
                      );
@@ -972,14 +957,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          8,
                          5,
-                         'Cycling',
                          'Medium',
                          45
                      );
@@ -987,14 +970,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          11,
                          4,
-                         'Hammer Curl',
                          'High',
                          20
                      );
@@ -1002,14 +983,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          12,
                          4,
-                         'Bicep Curl',
                          'High',
                          60
                      );
@@ -1017,14 +996,12 @@ INSERT INTO workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
                          intensity,
                          duration
                      )
                      VALUES (
                          13,
                          3,
-                         'Concentration Curl',
                          'Medium',
                          60
                      );
