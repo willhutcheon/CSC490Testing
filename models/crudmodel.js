@@ -49,7 +49,13 @@ async function getPreferences(user_id) {
     `;
     return await db.get(sql, user_id);
 }
-
+async function createInjury(params) {
+    let sql = `
+        INSERT INTO user_Injury (muscle_id, user_id, injury_intensity)
+        VALUES (?, ?, ?);
+    `;
+    return await db.run(sql, params);
+}
 module.exports = {
     createUser,
     deleteUser,
@@ -57,5 +63,6 @@ module.exports = {
     getUser,
     updatePreferences,
     getPreferences,
-    createPreferences
+    createPreferences,
+    createInjury
 }
