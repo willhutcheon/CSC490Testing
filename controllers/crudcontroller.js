@@ -127,7 +127,7 @@ async function getPreferences(req, res, next) {
         next(err);
     }
 }
-async function createInjuty(req, res, next) {
+async function createInjury(req, res, next) {
     let { muscle_id, user_id, injury_intensity} = req.body;
     user_id = parseInt(user_id, 10);
     console.log("Received parameters:", { muscle_id, user_id, injury_intensity });
@@ -139,7 +139,7 @@ async function createInjuty(req, res, next) {
         let params = [muscle_id, user_id, injury_intensity];
         console.log("Params for DB:", params);
         try {
-            await model.createInjuty(params);
+            await model.createInjury(params);
             res.status(201).send({ message: "Injury logged successfully" });
         } catch (err) {
             console.error("Error while logging injury, talk to Brandon", err.message);

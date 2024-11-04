@@ -61,8 +61,8 @@ async function getRecommendedPlans(req, res, next) {
             recommendedPlans: [recommendedPlan]
         });
         //New JSON code from here
-        const workout = await model.workoutExercises();
-         //res.json(workout);
+        // const workout = await model.workoutExercises();
+        //res.json(workout);
         // uncomment above to check but you will have to comment the other res.json out
         //If its not a simple fix lmk and ill change
     } catch (error) {
