@@ -298,9 +298,6 @@ function determineNextState(currentState, feedback, performanceMetrics, userPref
         "StrengthIntermediate": "StrengthAdvanced",
         "CardioBeginner": "CardioIntermediate",
         "CardioIntermediate": "CardioAdvanced",
-
-        // ADDED
-        "StrengthAdvanced": "StrengthBeginner"
     };
 
     let nextState = currentState;
