@@ -87,6 +87,38 @@ async function getRecommendedPlans(req, res, next) {
             status: "success",
             recommendedPlans: [recommendedPlan]
         });
+        //New JSON code from here
+        const workout = await model.workoutExercises();
+        const workouts = workout.reduce((acc, row) => {
+            const { workout_id, plan_id,intensity } = row;
+          const exercise = {
+            exercise_name: row.exercise_name,
+            exercise_id: row.exercise_id,
+            workout_id: row.workout_id,
+            Plan_sets: row.plan_sets,
+            Plan_reps: row.plan_reps,
+            Plan_weight: row.paln_weight,
+            rest: row.rest_time,
+            //duration: row.duration
+          };
+            const existingWorkout = acc.find(workout => workout.workout_id === workout_id && workout.plan_id === plan_id);
+          if (existingWorkout) {
+            existingWorkout.exercises.push(exercise);
+          } else {
+            acc.push({
+              workout_id,
+              plan_id: plan_id,
+              intensity,
+              exercises: [exercise]
+            });
+          }
+          
+          return acc;
+            
+        }, []);
+         //res.json(workouts);
+        // To here, uncomment about to check but you will have to comment the other res.json
+        //If its not a simple fix lmk and ill change
     } catch (error) {
         next(error);
     }
