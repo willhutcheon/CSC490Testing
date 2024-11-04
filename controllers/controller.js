@@ -32,33 +32,6 @@ async function getAllMuscles(req,res,next){
 }
 
 
-// Reinforcement Learning for recommending workout plans
-/* async function getRecommendedPlans(req, res, next) {
-    try {
-        const userId = parseInt(req.query.user_id, 10);
-        if (isNaN(userId)) {
-            throw new Error('Invalid User ID');
-        }
-        const userPreferences = await model.getUserPreferences(userId);
-        if (!userPreferences) {
-            throw new Error('No preferences found for user.');
-        }
-        const workoutPlans = await model.getWorkoutPlans(userId);
-        if (!workoutPlans || workoutPlans.length === 0) {
-            throw new Error('No workout plans available.');
-        }
-
-        const recommendedPlan = await model.recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId);
-        res.render("recommended-plans", {
-            plans: [recommendedPlan],
-            title: 'Recommended Workout Plans',
-            user: { user_id: userId }
-        });
-    } catch (error) {
-        next(error);
-    }
-} */
-
 // ADDED, above works
 async function getRecommendedPlans(req, res, next) {
     try {
@@ -149,40 +122,10 @@ async function getRecommendedPlans(req, res, next) {
     }
 } */
 
-/* async function submitPlanFeedback(req, res, next) {
-    try {
-        const { userId, planId, rating, totalCaloriesBurned } = req.body;
-        await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
-        res.send({ success: true });
-    } catch (error) {
-        next(error);
-    }
-} */
 
+// WORKS
 // ADDED, above works
-/* async function submitPlanFeedback(req, res, next) {
-    try {
-        const { userId, planId, rating, totalCaloriesBurned } = req.body;
-
-        // Store the feedback in the database
-        await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
-
-        // Calculate reward based on feedback
-        const feedback = { rating, totalCaloriesBurned };
-        const reward = model.calculateReward(feedback);
-
-        // Update Q-value with feedback
-        const state = await model.getUserPreferences(userId); // Assume state is based on user preferences
-        model.updateQValue(state, planId, reward, state);
-
-        res.send({ success: true });
-    } catch (error) {
-        next(error);
-    }
-} */
-
-// ADDED, above works
-async function submitPlanFeedback(req, res) {
+/* async function submitPlanFeedback(req, res) {
     try {
         const { userId, planId, rating, totalCaloriesBurned } = req.body;
         console.log(`Received feedback - User ID: ${userId}, Plan ID: ${planId}, Rating: ${rating}, Calories Burned: ${totalCaloriesBurned}`);
@@ -232,15 +175,16 @@ async function submitPlanFeedback(req, res) {
         });
         res.status(500).send({ error: 'Error submitting feedback.' });
     }
-}
-
-function determineNextState(currentState, feedback) {
+} */
+/* function determineNextState(currentState, feedback) {
     // Need to implement logic for determining the next state based on current state and feedback
     // using a simple concatenation currently as an example
     return currentState + feedback.rating; // This logic will likely need to be adjusted
-}
+} */
+// WORKS
 
-//here the user is undefined
+
+
 async function getUser(req, res, next) {
     const user_id =req.params.user_id.replace ( /[^\d.]/g, '' );//replaces user_id= so we just get the id
     try {
@@ -259,6 +203,134 @@ async function getUser(req, res, next) {
     }
 }
 
+async function submitPlanFeedback(req, res) {
+    try {
+        const { userId, planId, rating, totalCaloriesBurned } = req.body;
+        console.log(`Received feedback - User ID: ${userId}, Plan ID: ${planId}, Rating: ${rating}, Calories Burned: ${totalCaloriesBurned}`);
+
+        // Insert or update user plan feedback in the database
+        await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
+
+        if (!userId || !planId || !rating) {
+            return res.status(400).send('Missing required parameters: userId, planId, or feedback');
+        }
+
+        // Fetch user's current state from the database (preferences or history)
+        const state = await model.getUserPreferences(userId);
+
+        // console.log(`User state: ${JSON.stringify(state)}`);
+
+        if (!state || typeof state !== 'object') {
+            console.error(`Invalid state for user ${userId}: ${state}`);
+            throw new Error('Invalid State');
+        }
+
+        // Fetch performance metrics from exercises
+        const performanceMetrics = await model.getPerformanceMetrics(planId);
+        if (!performanceMetrics || performanceMetrics.length === 0) {
+            console.error(`No performance metrics found for planId: ${planId}`);
+            throw new Error('No Performance Metrics Found');
+        }
+
+        // Aggregate metrics
+        const totalReps = performanceMetrics.reduce((sum, metric) => sum + metric.plan_reps, 0);
+        const totalWeightLifted = performanceMetrics.reduce((sum, metric) => sum + (metric.plan_reps * metric.plan_weight), 0);
+
+        // Pass aggregated metrics to determineNextState
+        const nextState = determineNextState(state.fit_goal + state.exp_level, rating, { reps: totalReps, weightLifted: totalWeightLifted }, state.userPreferences);
+
+        if (!nextState || typeof nextState !== 'string') {
+            console.error(`Invalid next state derived from feedback: ${nextState}`);
+            throw new Error('Invalid Next State');
+        }
+
+        // Calculate reward
+        const reward = model.calculateReward({ rating, totalCaloriesBurned });
+
+        // Update Q-value based on feedback and reward
+        await model.updateQValue(userId, state.fit_goal + state.exp_level, Number(planId), reward, nextState);
+
+        // Respond with success
+        res.status(200).send({ message: 'Feedback submitted successfully!' });
+    } catch (error) {
+        console.error(`Error in submitPlanFeedback: ${error.message}`, {
+            body: req.body,
+            errorStack: error.stack
+        });
+        res.status(500).send({ error: 'Error submitting feedback.' });
+    }
+}
+function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
+    
+
+    // NEED THIS EVENTUALLY
+    // Check for manual preference adjustments from userPreferences
+    /* if (userPreferences.updated) {
+        // If the user manually updated their preferences, change the state accordingly
+        nextState = `${userPreferences.goal}${userPreferences.level}`;
+    } */
+
+
+    console.log(`Test Current State viewing: ${currentState}`);
+    console.log(`Performance Metrics in determineNextState viewing: ${JSON.stringify(performanceMetrics)}`);
+    console.log(`Current State viewing: ${currentState}`);
+    console.log(`Feedback viewing: ${JSON.stringify(feedback)}`);
+
+
+    // Define thresholds for feedback and performance
+    const feedbackThreshold = 3; // Threshold for low ratings triggering a state change
+    const performanceThreshold = 5; // Threshold for performance improvement triggering state progression
+
+    // Example state mappings based on feedback and performance
+    const stateMapping = {
+        "StrengthBeginner": "StrengthIntermediate",
+        "StrengthIntermediate": "StrengthAdvanced",
+        "CardioBeginner": "CardioIntermediate",
+        "CardioIntermediate": "CardioAdvanced",
+
+        // ADDED
+        "StrengthAdvanced": "StrengthBeginner"
+    };
+
+    let nextState = currentState;
+
+    // Evaluate user feedback (positive or negative)
+    if (feedback.rating < feedbackThreshold) {
+        // If feedback is consistently low, consider transitioning to a different workout focus or difficulty level
+        if (currentState.includes("Strength")) {
+            nextState = "CardioBeginner"; // Transition to cardio if strength is poorly rated
+        } else if (currentState.includes("Cardio")) {
+            nextState = "StrengthBeginner"; // Transition to strength if cardio is poorly rated
+        }
+    } else if (feedback.rating >= feedbackThreshold && feedback.rating <= 5) {
+        // Check performance metrics for improvement
+        if (performanceMetrics.reps > performanceThreshold) {
+            // If performance is improving, upgrade the state
+            nextState = stateMapping[currentState] || currentState; // Move to the next level if available
+        }
+    }
+
+    // Further customization based on user preferences can be added here
+    // For instance, if user prefers higher intensity, we could adjust the nextState accordingly.
+
+    return nextState;
+}
+
+
+
+// REMOVE
+/* const currentState = "CardioIntermediate";
+const feedback = { rating: 4 };
+const performanceMetrics = { reps: 10, weightLifted: 0 };
+const userPreferences = {}; // You can leave this empty for this test
+const nextState = determineNextState(currentState, feedback, performanceMetrics, userPreferences);
+console.log(`Test Current State: ${currentState}`);
+console.log(`Test Feedback Rating: ${feedback.rating}`);
+console.log(`Test Performance Metrics: ${JSON.stringify(performanceMetrics)}`);
+console.log(`Test Next State: ${nextState}`); */
+// REMOVE
+
+
 
 module.exports = {
     getAllUsers,
@@ -268,3 +340,5 @@ module.exports = {
     getAllMuscles,
     getUser
 };
+// Different plan, same state: Chosen when feedback is positive or performance doesn’t warrant a state change.
+// New state: Triggered by low feedback or high performance, suggesting either a new workout type (e.g., cardio) or a new level (e.g., intermediate).
