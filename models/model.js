@@ -81,8 +81,7 @@ async function getWorkoutPlans(userId) {
         // Push workout to the respective plan
         plans[planId].workouts.push({
             workout_id: row.workout_id,
-            intensity: row.intensity,
-            duration: row.duration
+            intensity: row.intensity
         });
     });
 
@@ -130,7 +129,7 @@ async function getUserWorkoutPlans(userId) {
         db.all(
             `
             SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active,
-                   w.workout_id, w.intensity, w.duration
+                   w.workout_id, w.intensity
             FROM workout_plans wp
             LEFT JOIN workouts w ON wp.plan_id = w.plan_id
             WHERE wp.user_id = ?;
