@@ -49,7 +49,28 @@ async function getPreferences(user_id) {
     `;
     return await db.get(sql, user_id);
 }
-
+async function createInjury(params) {
+    let sql = `
+        INSERT INTO user_Injury (muscle_id, user_id, injury_intensity)
+        VALUES (?, ?, ?);
+    `;
+    return await db.run(sql, params);
+}
+async function createWorkoutPerformance(params) {
+    let sql = `
+       INSERT INTO workout_performance (perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date)
+        VALUES (?, ?, ?, ?, ?, ?);
+    `;
+    return await db.run(sql, params);
+}
+async function updateWorkoutPerfromance(params) {
+    let sql = `
+        UPDATE users
+        SET actual_sets = ?, actual_reps = ?, actual_weight = ?, perf_date = ?
+        WHERE perf_id = ?;
+    `;
+    return await db.run(sql, params);
+}
 module.exports = {
     createUser,
     deleteUser,
@@ -57,5 +78,8 @@ module.exports = {
     getUser,
     updatePreferences,
     getPreferences,
-    createPreferences
+    createPreferences,
+    createInjury,
+    createWorkoutPerformance,
+    updateWorkoutPerfromance
 }

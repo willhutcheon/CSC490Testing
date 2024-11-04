@@ -13,12 +13,24 @@
 
             <div class="form-group">
                 <label for="preferred_types">Preferred Workout Types:</label>
-                <input type="text" id="preferred_types" name="preferred_types" value="<%= preferences.preferred_types %>" required>
+                <select id="preferred_types" name="preferred_types" required>
+                    <option value="" disabled selected>Select type</option>
+                    <option value="Weightlifting">Weightlifting</option>
+                    <option value="Running">Running</option>
+                    <option value="Bodybuilding">Bodybuilding</option>
+                    <option value="Powerlifting">Powerlifting</option>
+                    <option value="Cycling">Cycling</option>
+                </select>            
             </div>
 
             <div class="form-group">
                 <label for="preferred_intensity">Preferred Intensity:</label>
-                <input type="text" id="preferred_intensity" name="preferred_intensity" value="<%= preferences.preferred_intensity %>" required>
+                <select id="preferred_intensity" name="preferred_intensity" required>
+                    <option value="" disabled selected>Select intensity</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -27,8 +39,20 @@
             </div>
 
             <div class="form-group">
-                <label for="preferred_exercise">Preferred Exercises:</label>
-                <input type="text" id="preferred_exercise" name="preferred_exercise" value="<%= preferences.preferred_exercise %>" required>
+                 <label for="preferred_exercise">Preferred Exercises:</label>
+                <select id="preferred_exercise" name="preferred_exercise" required>
+                    <option value="" disabled selected>Select exercise</option>
+                    <option value="Squat">Squat</option>
+                    <option value="Bench Press">Bench Press</option>
+                    <option value="Running">Running</option>
+                    <option value="Treadmill">Treadmill</option>
+                    <option value="Cycling">Cycling</option>
+                    <option value="Stationary Bike">Stationary Bike</option>
+                    <option value="Deadlift">Deadlift</option>
+                    <option value="Hammer_Curl">Hammer Curl</option>
+                    <option value="Bicep_Curl">Bicep Curl</option>
+                    <option value="Concentration_Curl">Concentration Curl</option>
+                </select>                
             </div>
 
             <button type="submit">Update Preferences</button>

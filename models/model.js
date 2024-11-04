@@ -61,6 +61,10 @@ async function getWorkoutPlans(userId) {
             };
         }
 
+        // Push workout to the respective plan
+        plans[planId].workouts.push({
+            workout_id: row.workout_id,
+            intensity: row.intensity
         let workout = plans[planId].workouts.find(w => w.workout_id === row.workout_id);
         if (!workout) {
             workout = {
@@ -124,7 +128,7 @@ async function getUserWorkoutPlans(userId) {
         db.all(
             `
             SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active,
-                   w.workout_id, w.exercise_name, w.intensity, w.duration
+                   w.workout_id, w.intensity
             FROM workout_plans wp
             LEFT JOIN workouts w ON wp.plan_id = w.plan_id
             WHERE wp.user_id = ?;
@@ -327,11 +331,28 @@ function determineNextState(currentState, feedback, performanceMetrics, userPref
     return nextState;
 }
 
+    return recommendedPlan;
+} */
+async function injuryFilter(userId) {
+    const sql = `
+        SELECT wp.*
+        FROM workout_plans wp
+            JOIN workouts w ON wp.plan_id = w.plan_id
+            JOIN exercises e ON w.workout_id = e.workout_id
+            LEFT JOIN muscle_workout mw ON w.workout_id = mw.workout_id
+            LEFT JOIN user_injury ui ON mw.muscle_id = ui.muscle_id
+            WHERE wp.user_id = ? AND ( wp.active = true AND ui.injury_intensity <> 'severe')
+    `;
+    return await db.get(sql, [userId]);
+}
+
+
 
 async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
     const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
     const availablePlans = workoutPlans;//Here or one step back
-
+    //injury filter
+    //const availablePlans = injuryFilter(userId);
     // Choose a workout plan (action) based on the current state
     const recommendedPlan = chooseAction(state, availablePlans);
 
@@ -377,6 +398,50 @@ async function getUser(user_id) {
     return await db.all(sql, [user_id]);
 }
 
+ 
+async function workoutExercises(){
+        
+       let sql = 
+        `SELECT w.workout_id AS workout_id, w.plan_id AS plan_id, w.intensity, e.exercise_id, e.workout_id, e.plan_sets, e.plan_reps, e.plan_weight,e.exercise_name 
+           FROM workouts w 
+           LEFT JOIN exercises e ON w.workout_id = e.workout_id;`;
+    
+        const workouts = await db.get(sql);
+     //New JSON code from here
+        //const workout = await model.workoutExercises();
+        const workouts = workout.reduce((acc, row) => {
+            const { workout_id, plan_id,intensity } = row;
+          const exercise = {
+            exercise_name: row.exercise_name,
+            exercise_id: row.exercise_id,
+            workout_id: row.workout_id,
+            Plan_sets: row.plan_sets,
+            Plan_reps: row.plan_reps,
+            Plan_weight: row.paln_weight,
+            rest: row.rest_time,
+            //duration: row.duration
+          };
+            const existingWorkout = acc.find(workout => workout.workout_id === workout_id && workout.plan_id === plan_id);
+          if (existingWorkout) {
+            existingWorkout.exercises.push(exercise);
+          } else {
+            acc.push({
+              workout_id,
+              plan_id: plan_id,
+              intensity,
+              exercises: [exercise]
+            });
+          }
+          
+          return acc;
+            
+        }, []);
+
+    return workouts;
+         //res.json(workouts);
+        // To here, uncomment about to check but you will have to comment the other res.json
+        //If its not a simple fix lmk and ill change
+}
 
 
 async function getPerformanceMetrics(planId) {
@@ -408,6 +473,6 @@ module.exports = {
     upsertQValue,
     getAllMuscles,
     getUser,
-
+    workoutExercises,
     getPerformanceMetrics
 };
