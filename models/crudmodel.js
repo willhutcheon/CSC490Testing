@@ -63,7 +63,14 @@ async function createWorkoutPerformance(params) {
     `;
     return await db.run(sql, params);
 }
-
+async function updateWorkoutPerfromance(params) {
+    let sql = `
+        UPDATE users
+        SET actual_sets = ?, actual_reps = ?, actual_weight = ?, perf_date = ?
+        WHERE perf_id = ?;
+    `;
+    return await db.run(sql, params);
+}
 module.exports = {
     createUser,
     deleteUser,
@@ -73,5 +80,6 @@ module.exports = {
     getPreferences,
     createPreferences,
     createInjury,
-    createWorkoutPerformance
+    createWorkoutPerformance,
+    updateWorkoutPerfromance
 }
