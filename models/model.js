@@ -418,7 +418,7 @@ async function getUser(user_id) {
     return await db.all(sql, [user_id]);
 }
 
-async function workoutExercises(sql){
+async function workoutExercises(){
         
        let sql = 
         `SELECT w.workout_id AS workout_id, w.plan_id AS plan_id, w.intensity, e.exercise_id, e.workout_id, e.plan_sets, e.plan_reps, e.plan_weight,e.exercise_name 
