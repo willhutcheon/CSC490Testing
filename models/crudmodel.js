@@ -56,6 +56,14 @@ async function createInjury(params) {
     `;
     return await db.run(sql, params);
 }
+async function createWorkoutPerformance(params) {
+    let sql = `
+       INSERT INTO workout_performance (perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date)
+        VALUES (?, ?, ?, ?, ?, ?);
+    `;
+    return await db.run(sql, params);
+}
+
 module.exports = {
     createUser,
     deleteUser,
@@ -64,5 +72,6 @@ module.exports = {
     updatePreferences,
     getPreferences,
     createPreferences,
-    createInjury
+    createInjury,
+    createWorkoutPerformance
 }
