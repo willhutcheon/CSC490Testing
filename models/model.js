@@ -1,3 +1,4 @@
+
 "use strict";
 const db = require("../models/db-conn");
 // added
@@ -302,6 +303,9 @@ function determineNextState(currentState, feedback, performanceMetrics, userPref
         "StrengthIntermediate": "StrengthAdvanced",
         "CardioBeginner": "CardioIntermediate",
         "CardioIntermediate": "CardioAdvanced",
+
+        // ADDED
+        "StrengthAdvanced": "StrengthBeginner"
     };
 
     let nextState = currentState;
@@ -329,7 +333,7 @@ function determineNextState(currentState, feedback, performanceMetrics, userPref
 }
 
     return recommendedPlan;
-} */
+}
 async function injuryFilter(userId) {
     const sql = `
         SELECT wp.*
