@@ -1706,7 +1706,26 @@ INSERT INTO workouts (
                          7,
                          'Medium'
                      );
-
+INSERT INTO workouts (
+                         workout_id,
+                         plan_id,
+                         intensity
+                     )
+                     VALUES (
+                         22,
+                         4,
+                         'Medium'
+                     );
+INSERT INTO workouts (
+                         workout_id,
+                         plan_id,
+                         intensity
+                     )
+                     VALUES (
+                         23,
+                         4,
+                         'High'
+                     );
 
 --We need a muscle group for injuries and for exercises
 --exercise can target multiple muscles
