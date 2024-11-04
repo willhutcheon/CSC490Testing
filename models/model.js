@@ -531,6 +531,16 @@ async function getPerformanceMetrics(planId) {
 }
 
 
+// ADDED
+async function updateUserState(userId, fitGoal, expLevel) {
+    const query = `UPDATE users SET fit_goal = ?, exp_level = ? WHERE user_id = ?`;
+    const params = [fitGoal, expLevel, userId];
+    return await db.run(query, params);
+}
+
+
+
+
 module.exports = {
     getAllUsers,
     getUserPreferences,
@@ -547,5 +557,8 @@ module.exports = {
     getAllMuscles,
     getUser,
     //workoutExercises,
-    getPerformanceMetrics
+    getPerformanceMetrics,
+
+    // ADDED
+    updateUserState
 };
