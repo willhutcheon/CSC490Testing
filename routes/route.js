@@ -40,6 +40,8 @@ router.post('/preferences/update/:user_id', crudController.updatePreferences);
 router.post('/preferences/create', crudController.createPreferences);
 router.post('/injury/create', crudController.createInjury);
 router.post('/workoutperformance/create', crudController.createWorkoutPerformance);
+router.post('/workoutperformance/update', crudController.updateWorkoutPerformance);
+
 
 
 
