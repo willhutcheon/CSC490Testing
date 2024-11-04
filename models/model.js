@@ -333,21 +333,160 @@ function calculateReward(feedback) {
 }
 
 
+// KEEP THIS
 // Choose the best workout plan (action) based on current state and Q-values
 function chooseAction(state, availablePlans) {
     const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    availablePlans.forEach(plan => {
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${getQValue(state, plan.plan_id)}`);
+    });
+
     if (Math.random() < epsilon) {
         // Exploration: choose a random workout plan
         return availablePlans[Math.floor(Math.random() * availablePlans.length)];
     } else {
+
         // Exploitation: choose the workout plan with the highest Q-value
         return availablePlans.reduce((bestAction, plan) => {
+            // const qValue = getQValue(state, plan.plan_id);
+            // ADDED
             const qValue = getQValue(state, plan.plan_id);
+
+            console.log(`Current Q value: ${qValue}`);
+
+
             return (!bestAction || qValue > getQValue(state, bestAction.plan_id)) ? plan : bestAction;
         }, null);
     }
 }
+
+// USE?
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+    
+    // Validate inputs
+    if (!state || !availablePlans || !Array.isArray(availablePlans) || availablePlans.length === 0) {
+        console.error('Invalid inputs to chooseAction:', { state, availablePlansLength: availablePlans?.length });
+        throw new Error('Invalid inputs to chooseAction');
+    }
+
+    // Log available plans for debugging
+    console.log(`Choosing action for state: ${state}`);
+    console.log(`Number of available plans: ${availablePlans.length}`);
+
+    try {
+        // First, get all Q-values for available plans
+        const planQValues = await Promise.all(
+            availablePlans.map(async (plan) => ({
+                plan,
+                qValue: await getQValue(state, plan.plan_id)
+            }))
+        );
+
+        // Log Q-values for debugging
+        planQValues.forEach(({ plan, qValue }) => {
+            console.log(`Plan ${plan.plan_id} Q-value: ${qValue}`);
+        });
+
+        if (Math.random() < epsilon) {
+            // Exploration: choose a random workout plan
+            const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+            console.log(`Exploring: Randomly selected plan ${randomPlan.plan_id}`);
+            return randomPlan;
+        } else {
+            // Exploitation: choose the plan with highest Q-value
+            const bestPlanData = planQValues.reduce((best, current) => {
+                return (current.qValue > best.qValue) ? current : best;
+            });
+
+            console.log(`Exploiting: Selected plan ${bestPlanData.plan.plan_id} with Q-value ${bestPlanData.qValue}`);
+            return bestPlanData.plan;
+        }
+    } catch (error) {
+        console.error('Error in chooseAction:', error);
+        throw error;
+    }
+} */
+
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    // Log available plans and their Q-values
+    for (const plan of availablePlans) {
+        const qValue = await getQValue(state, plan.plan_id); // Await the Q-value
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+    }
+
+    if (Math.random() < epsilon) {
+        // Exploration: choose a random workout plan
+        const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+        console.log(`Choosing random plan: ${randomPlan.plan_id}`);
+        return randomPlan;
+    } else {
+        // Exploitation: choose the workout plan with the highest Q-value
+        const bestPlan = await availablePlans.reduce(async (bestActionPromise, plan) => {
+            const bestAction = await bestActionPromise; // Resolve the best action promise
+            const qValue = await getQValue(state, plan.plan_id); // Await the Q-value for the current plan
+
+            console.log(`Evaluating Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+
+            // Compare and decide the best plan
+            return (!bestAction || qValue > await getQValue(state, bestAction.plan_id)) ? plan : bestAction;
+        }, Promise.resolve(null));
+
+        if (bestPlan) {
+            const bestQValue = await getQValue(state, bestPlan.plan_id);
+            console.log(`Best Plan ID: ${bestPlan.plan_id}, Best Q-Value: ${bestQValue}`);
+        } else {
+            console.log("No available plans to choose from.");
+        }
+
+        return bestPlan;
+    }
+} */
+
+
+
 // make above async?
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    // Log available plans and their Q-values
+    for (const plan of availablePlans) {
+        const qValue = await getQValue(state, plan.plan_id);
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+    }
+
+    if (Math.random() < epsilon) {
+        // Exploration: choose a random workout plan
+        const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+        console.log(`Choosing random plan: ${randomPlan.plan_id}`);
+        return randomPlan;
+    } else {
+        // Exploitation: choose the workout plan with the highest Q-value
+        const bestPlan = await availablePlans.reduce(async (bestActionPromise, plan) => {
+            const bestAction = await bestActionPromise; // Resolve the promise
+
+            const qValue = await getQValue(state, plan.plan_id);
+            console.log(`Evaluating Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+
+            return (!bestAction || qValue > await getQValue(state, bestAction.plan_id)) ? plan : bestAction;
+        }, Promise.resolve(null));
+
+        if (bestPlan) {
+            const bestQValue = await getQValue(state, bestPlan.plan_id);
+            console.log(`Best Plan ID: ${bestPlan.plan_id}, Best Q-Value: ${bestQValue}`);
+        } else {
+            console.log("No available plans to choose from.");
+        }
+
+        return bestPlan;
+    }
+} */
+
+
+
 
 function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
 
@@ -424,6 +563,8 @@ async function injuryFilter(userId) {
 async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
     const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
     const availablePlans = workoutPlans;//Here or one step back
+
+
     //injury filter
     //const availablePlans = injuryFilter(userId);
     // Choose a workout plan (action) based on the current state

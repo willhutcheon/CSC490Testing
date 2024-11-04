@@ -56,10 +56,13 @@ async function getRecommendedPlans(req, res, next) {
             plans: [recommendedPlan],
             user: { user_id: userId }
         }); */
+        
+        // KEEP AND USE
         res.json({
             status: "success",
             recommendedPlans: [recommendedPlan]
         });
+
         //New JSON code from here
         // const workout = await model.workoutExercises();
         //res.json(workout);
