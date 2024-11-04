@@ -1490,7 +1490,6 @@ CREATE TABLE IF NOT EXISTS workouts (
                        UNIQUE,
     plan_id       INT  NOT NULL,
     intensity     TEXT NOT NULL,
-    duration      INT  NOT NULL,
     PRIMARY KEY (
         workout_id
     ),
@@ -1503,247 +1502,209 @@ CREATE TABLE IF NOT EXISTS workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          1,
                          1,
-                         'High',
-                         60
-                     );
+                         'High'
+    );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          2,
                          1,
-                         'High',
-                         60
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          3,
                          2,
-                         'Low',
-                         30
+                         'Low'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          4,
                          2,
-                         'Low',
-                         30
+                         'Low'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          5,
                          3,
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          6,
                          3,
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          7,
                          4,
-                         'High',
-                         90
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          8,
                          5,
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          11,
                          4,
-                         'High',
-                         20
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          12,
                          4,
-                         'High',
-                         60
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          13,
                          3,
-                         'Medium',
-                         60
+                         'Medium'
                      );
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          14,
                          6,
-                         'High',
-                         60
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          15,
                          7,
-                         'High',
-                         60
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          16,
                          8,
-                         'Low',
-                         30
+                         'Low'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          17,
                          9,
-                         'Low',
-                         30
+                         'Low'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          18,
                          10,
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          19,
                          9,
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          20,
                          8,
-                         'High',
-                         90
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          21,
                          7,
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 
