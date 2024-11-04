@@ -418,7 +418,49 @@ async function getUser(user_id) {
     return await db.all(sql, [user_id]);
 }
 
+async function workoutExercises(sql){
+        
+       let sql = 
+        `SELECT w.workout_id AS workout_id, w.plan_id AS plan_id, w.intensity, e.exercise_id, e.workout_id, e.plan_sets, e.plan_reps, e.plan_weight,e.exercise_name 
+           FROM workouts w 
+           LEFT JOIN exercises e ON w.workout_id = e.workout_id;`;
+    
+        const workouts = await db.get(sql);
+     //New JSON code from here
+        //const workout = await model.workoutExercises();
+        const workouts = workout.reduce((acc, row) => {
+            const { workout_id, plan_id,intensity } = row;
+          const exercise = {
+            exercise_name: row.exercise_name,
+            exercise_id: row.exercise_id,
+            workout_id: row.workout_id,
+            Plan_sets: row.plan_sets,
+            Plan_reps: row.plan_reps,
+            Plan_weight: row.paln_weight,
+            rest: row.rest_time,
+            //duration: row.duration
+          };
+            const existingWorkout = acc.find(workout => workout.workout_id === workout_id && workout.plan_id === plan_id);
+          if (existingWorkout) {
+            existingWorkout.exercises.push(exercise);
+          } else {
+            acc.push({
+              workout_id,
+              plan_id: plan_id,
+              intensity,
+              exercises: [exercise]
+            });
+          }
+          
+          return acc;
+            
+        }, []);
 
+    return workouts;
+         //res.json(workouts);
+        // To here, uncomment about to check but you will have to comment the other res.json
+        //If its not a simple fix lmk and ill change
+}
 module.exports = {
     getAllUsers,
     getUserPreferences,
@@ -433,5 +475,6 @@ module.exports = {
     getQValue,
     upsertQValue,
     getAllMuscles,
-    getUser
+    getUser,
+    workoutExercises
 };
