@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS exercises (
     rest_time     INT           NOT NULL,
     exercise_name VARCHAR (255) NOT NULL
                                 DEFAULT 'Unknown',
+    duration     INT           NOT NULL,
+
     PRIMARY KEY (
         exercise_id
     ),
@@ -35,7 +37,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           1,
@@ -45,7 +48,8 @@ INSERT INTO exercises (
                           10,
                           100,
                           120,
-                          'Squat'
+                          'Squat',
+                            10
                       );
 
 INSERT INTO exercises (
@@ -56,7 +60,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           2,
@@ -66,7 +71,8 @@ INSERT INTO exercises (
                           12,
                           75,
                           90,
-                          'Bench Press'
+                          'Bench Press',
+                            5
                       );
 
 INSERT INTO exercises (
@@ -77,7 +83,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           3,
@@ -87,7 +94,8 @@ INSERT INTO exercises (
                           0,
                           0,
                           0,
-                          'Running'
+                          'Running',
+                            30
                       );
 
 INSERT INTO exercises (
@@ -98,7 +106,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           4,
@@ -108,7 +117,8 @@ INSERT INTO exercises (
                           0,
                           0,
                           0,
-                          'Treadmill'
+                          'Treadmill',
+                            60
                       );
 
 INSERT INTO exercises (
@@ -119,7 +129,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           5,
@@ -129,7 +140,8 @@ INSERT INTO exercises (
                           15,
                           0,
                           60,
-                          'Stationary Bike'
+                          'Stationary Bike',
+                            60
                       );
 
 INSERT INTO exercises (
@@ -140,7 +152,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           6,
@@ -150,7 +163,8 @@ INSERT INTO exercises (
                           5,
                           200,
                           180,
-                          'Deadlift'
+                          'Deadlift',
+                            5
                       );
 
 INSERT INTO exercises (
@@ -161,7 +175,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           7,
@@ -171,7 +186,8 @@ INSERT INTO exercises (
                           4,
                           40,
                           50,
-                          'Hammer Curl'
+                          'Hammer Curl',
+                            15
                       );
 
 INSERT INTO exercises (
@@ -182,7 +198,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           8,
@@ -192,7 +209,8 @@ INSERT INTO exercises (
                           8,
                           10,
                           60,
-                          'Bicep Curl'
+                          'Bicep Curl',
+                            15
                       );
 
 INSERT INTO exercises (
@@ -203,7 +221,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           9,
@@ -213,7 +232,8 @@ INSERT INTO exercises (
                           0,
                           0,
                           0,
-                          'Cycling'
+                          'Cycling',
+                            60
                       );
 
 INSERT INTO exercises (
@@ -224,7 +244,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           10,
@@ -234,7 +255,8 @@ INSERT INTO exercises (
                           10,
                           25,
                           60,
-                          'Concentration Curl'
+                          'Concentration Curl',
+                            15
                       );
 
 INSERT INTO exercises (
@@ -245,7 +267,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           11,
@@ -255,7 +278,8 @@ INSERT INTO exercises (
                           10,
                           100,
                           20,
-                          'Row'
+                          'Row',
+                            15
                       );
 
 
