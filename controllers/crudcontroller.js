@@ -127,11 +127,86 @@ async function getPreferences(req, res, next) {
         next(err);
     }
 }
+async function createInjuty(req, res, next) {
+    let { muscle_id, user_id, injury_intensity} = req.body;
+    user_id = parseInt(user_id, 10);
+    console.log("Received parameters:", { muscle_id, user_id, injury_intensity });
+    if (isNaN(user_id)) {
+        console.error("user_id is not a number:", req.body.user_id);
+        return res.status(400).send({ error: "User ID must be a number" });
+    }
+    if (muscle_id, user_id, injury_intensity) {
+        let params = [muscle_id, user_id, injury_intensity];
+        console.log("Params for DB:", params);
+        try {
+            await model.createInjuty(params);
+            res.status(201).send({ message: "Injury logged successfully" });
+        } catch (err) {
+            console.error("Error while logging injury, talk to Brandon", err.message);
+            res.status(500).send({ error: "Failed to log injury" });
+            next(err);
+        }
+    } else {
+        res.status(400).send({ error: "Missing required fields" });
+    }
+}
+
+async function createWorkoutPerformance(req, res, next) {
+    let { perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date } = req.body;
+    perf_id = parseInt(perf_id, 10);
+    console.log("Received parameters:", { perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date });
+    if (isNaN(perf_id)) {
+        console.error("perf_id is not a number:", req.body.perf_id);
+        return res.status(400).send({ error: "Perf ID must be a number" });
+    }
+    if (perf_id && exercise_id && actual_sets && actual_reps && actual_weight && perf_date) {
+        let params = [perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date];
+        console.log("Params for DB:", params);
+        try {
+            await model.createWorkoutPerformance(params);
+            res.status(201).send({ message: "Workout Performance created successfully" });
+        } catch (err) {
+            console.error("Error while creating a entry, check with Brandon", err.message);
+            res.status(500).send({ error: "Failed to create Workout Performance" });
+            next(err);
+        }
+    } else {
+        res.status(400).send({ error: "Missing required fields" });
+    }
+}
+
+async function updateWorkoutPerformance(req, res, next) {
+    let { perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date } = req.body;
+    perf_id = parseInt(perf_id, 10);
+    console.log("Received parameters:", { perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date });
+    if (isNaN(perf_id)) {
+        console.error("perf_id is not a number:", req.body.perf_id);
+        return res.status(400).send({ error: "Perf ID must be a number" });
+    }
+    if (perf_id && exercise_id && actual_sets && actual_reps && actual_weight && perf_date) {
+        let params = [perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date];
+        console.log("Params for DB:", params);
+        try {
+            await model.updateWorkoutPerformance(params);
+            res.status(201).send({ message: "Workout Performance updated successfully" });
+        } catch (err) {
+            console.error("Error while updating an entry, check with Brandon", err.message);
+            res.status(500).send({ error: "Failed to update Workout Performance" });
+            next(err);
+        }
+    } else {
+        res.status(400).send({ error: "Missing required fields" });
+    }
+}
+
 module.exports = {
     createUser,
     updateUser,
     getUser,
     updatePreferences,
     getPreferences,
-    createPreferences
+    createPreferences,
+    createInjury,
+    createWorkoutPerformance,
+    updateWorkoutPerformance
 }
