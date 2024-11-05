@@ -1,4 +1,5 @@
-"use strict";
+
+// "use strict";
 const db = require("../models/db-conn");
 // added
 // const controller = require("../controllers/controller");
@@ -28,7 +29,7 @@ async function getUserPreferences(userId) {
 // KEEP THIS, WORKS
 // Fetch active workout plans for the user, including associated workouts and exercises
 //for severe workouts just modify this
-async function getWorkoutPlans(userId) {
+/* async function getWorkoutPlans(userId) {
     const sql = `
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
            w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
@@ -40,10 +41,9 @@ async function getWorkoutPlans(userId) {
     WHERE wp.user_id = ? AND wp.active = true;
     `;
 
-    const rows = await db.all(sql, [userId]);
+    const rows = await db.all(sql, [userId]) || [];
 
     console.log('Raw SQL Result Rows:', rows);
-
 
     const plans = {};
 
@@ -61,11 +61,9 @@ async function getWorkoutPlans(userId) {
             };
         }
 
-        // Push workout to the respective plan
-        plans[planId].workouts.push({
-            workout_id: row.workout_id,
-            intensity: row.intensity
+        // Find or create the workout object within the plan's workouts array
         let workout = plans[planId].workouts.find(w => w.workout_id === row.workout_id);
+
         if (!workout) {
             workout = {
                 workout_id: row.workout_id,
@@ -76,6 +74,7 @@ async function getWorkoutPlans(userId) {
             plans[planId].workouts.push(workout);
         }
 
+        // Add the exercise to the workout's exercises array
         workout.exercises.push({
             exercise_id: row.exercise_id,
             api_id: row.api_id,
@@ -89,8 +88,83 @@ async function getWorkoutPlans(userId) {
 
     console.log('Structured Plans Object:', plans);
     return Object.values(plans);
+} */
 
+
+
+async function getWorkoutPlans(userId) {
+    const sql = `
+    SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
+           w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
+           e.plan_reps, e.plan_weight, e.rest_time, 
+           e.exercise_name, w.intensity, w.duration
+    FROM workout_plans wp
+        JOIN workouts w ON wp.plan_id = w.plan_id
+        JOIN exercises e ON w.workout_id = e.workout_id
+    WHERE wp.user_id = ? AND wp.active = true;
+    `;
+
+    const rows = await db.all(sql, [userId]);
+
+    console.log('Raw SQL Result Rows:', rows);
+
+    const plans = {};
+
+    rows.forEach(row => {
+        const planId = row.plan_id;
+
+        if (!plans[planId]) {
+            plans[planId] = {
+                plan_id: planId,
+                user_id: userId,
+                start_date: row.start_date,
+                end_date: row.end_date,
+                active: row.active,
+                workouts: []
+            };
+        }
+
+        // Find or create the workout object within the plan's workouts array
+        let workout = plans[planId].workouts.find(w => w.workout_id === row.workout_id);
+
+        if (!workout) {
+            workout = {
+                workout_id: row.workout_id,
+                intensity: row.intensity,
+                duration: row.duration,
+                exercises: []
+            };
+            plans[planId].workouts.push(workout);
+        }
+
+        // Add the exercise to the workout's exercises array
+        workout.exercises.push({
+            exercise_id: row.exercise_id,
+            api_id: row.api_id,
+            plan_sets: row.plan_sets,
+            plan_reps: row.plan_reps,
+            plan_weight: row.plan_weight,
+            rest_time: row.rest_time,
+            exercise_name: row.exercise_name
+        });
+    });
+
+    console.log('Structured Plans Object:', plans);
+    return Object.values(plans);
 }
+
+
+
+// Fetch user feedback for a workout plan
+async function getUserPlanFeedback(userId, planId) {
+    const sql = `
+        SELECT rating, total_calories_burned 
+        FROM user_plan_feedback 
+        WHERE user_id = ? AND plan_id = ?;
+    `;
+    return await db.get(sql, [userId, planId]);
+}
+
 
 
 // Fetch user feedback for a workout plan
@@ -259,24 +333,163 @@ function calculateReward(feedback) {
 }
 
 
+// KEEP THIS
 // Choose the best workout plan (action) based on current state and Q-values
 function chooseAction(state, availablePlans) {
     const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    availablePlans.forEach(plan => {
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${getQValue(state, plan.plan_id)}`);
+    });
+
     if (Math.random() < epsilon) {
         // Exploration: choose a random workout plan
         return availablePlans[Math.floor(Math.random() * availablePlans.length)];
     } else {
+
         // Exploitation: choose the workout plan with the highest Q-value
         return availablePlans.reduce((bestAction, plan) => {
+            // const qValue = getQValue(state, plan.plan_id);
+            // ADDED
             const qValue = getQValue(state, plan.plan_id);
+
+            console.log(`Current Q value: ${qValue}`);
+
+
             return (!bestAction || qValue > getQValue(state, bestAction.plan_id)) ? plan : bestAction;
         }, null);
     }
 }
+
+// USE?
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+    
+    // Validate inputs
+    if (!state || !availablePlans || !Array.isArray(availablePlans) || availablePlans.length === 0) {
+        console.error('Invalid inputs to chooseAction:', { state, availablePlansLength: availablePlans?.length });
+        throw new Error('Invalid inputs to chooseAction');
+    }
+
+    // Log available plans for debugging
+    console.log(`Choosing action for state: ${state}`);
+    console.log(`Number of available plans: ${availablePlans.length}`);
+
+    try {
+        // First, get all Q-values for available plans
+        const planQValues = await Promise.all(
+            availablePlans.map(async (plan) => ({
+                plan,
+                qValue: await getQValue(state, plan.plan_id)
+            }))
+        );
+
+        // Log Q-values for debugging
+        planQValues.forEach(({ plan, qValue }) => {
+            console.log(`Plan ${plan.plan_id} Q-value: ${qValue}`);
+        });
+
+        if (Math.random() < epsilon) {
+            // Exploration: choose a random workout plan
+            const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+            console.log(`Exploring: Randomly selected plan ${randomPlan.plan_id}`);
+            return randomPlan;
+        } else {
+            // Exploitation: choose the plan with highest Q-value
+            const bestPlanData = planQValues.reduce((best, current) => {
+                return (current.qValue > best.qValue) ? current : best;
+            });
+
+            console.log(`Exploiting: Selected plan ${bestPlanData.plan.plan_id} with Q-value ${bestPlanData.qValue}`);
+            return bestPlanData.plan;
+        }
+    } catch (error) {
+        console.error('Error in chooseAction:', error);
+        throw error;
+    }
+} */
+
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    // Log available plans and their Q-values
+    for (const plan of availablePlans) {
+        const qValue = await getQValue(state, plan.plan_id); // Await the Q-value
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+    }
+
+    if (Math.random() < epsilon) {
+        // Exploration: choose a random workout plan
+        const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+        console.log(`Choosing random plan: ${randomPlan.plan_id}`);
+        return randomPlan;
+    } else {
+        // Exploitation: choose the workout plan with the highest Q-value
+        const bestPlan = await availablePlans.reduce(async (bestActionPromise, plan) => {
+            const bestAction = await bestActionPromise; // Resolve the best action promise
+            const qValue = await getQValue(state, plan.plan_id); // Await the Q-value for the current plan
+
+            console.log(`Evaluating Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+
+            // Compare and decide the best plan
+            return (!bestAction || qValue > await getQValue(state, bestAction.plan_id)) ? plan : bestAction;
+        }, Promise.resolve(null));
+
+        if (bestPlan) {
+            const bestQValue = await getQValue(state, bestPlan.plan_id);
+            console.log(`Best Plan ID: ${bestPlan.plan_id}, Best Q-Value: ${bestQValue}`);
+        } else {
+            console.log("No available plans to choose from.");
+        }
+
+        return bestPlan;
+    }
+} */
+
+
+
 // make above async?
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    // Log available plans and their Q-values
+    for (const plan of availablePlans) {
+        const qValue = await getQValue(state, plan.plan_id);
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+    }
+
+    if (Math.random() < epsilon) {
+        // Exploration: choose a random workout plan
+        const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+        console.log(`Choosing random plan: ${randomPlan.plan_id}`);
+        return randomPlan;
+    } else {
+        // Exploitation: choose the workout plan with the highest Q-value
+        const bestPlan = await availablePlans.reduce(async (bestActionPromise, plan) => {
+            const bestAction = await bestActionPromise; // Resolve the promise
+
+            const qValue = await getQValue(state, plan.plan_id);
+            console.log(`Evaluating Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+
+            return (!bestAction || qValue > await getQValue(state, bestAction.plan_id)) ? plan : bestAction;
+        }, Promise.resolve(null));
+
+        if (bestPlan) {
+            const bestQValue = await getQValue(state, bestPlan.plan_id);
+            console.log(`Best Plan ID: ${bestPlan.plan_id}, Best Q-Value: ${bestQValue}`);
+        } else {
+            console.log("No available plans to choose from.");
+        }
+
+        return bestPlan;
+    }
+} */
+
+
+
 
 function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
-    
+
 
     // NEED THIS EVENTUALLY
     // Check for manual preference adjustments from userPreferences
@@ -331,8 +544,7 @@ function determineNextState(currentState, feedback, performanceMetrics, userPref
     return nextState;
 }
 
-    return recommendedPlan;
-} */
+
 async function injuryFilter(userId) {
     const sql = `
         SELECT wp.*
@@ -351,6 +563,8 @@ async function injuryFilter(userId) {
 async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
     const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
     const availablePlans = workoutPlans;//Here or one step back
+
+
     //injury filter
     //const availablePlans = injuryFilter(userId);
     // Choose a workout plan (action) based on the current state
@@ -398,20 +612,20 @@ async function getUser(user_id) {
     return await db.all(sql, [user_id]);
 }
 
- 
-async function workoutExercises(){
-        
-       let sql = 
+
+/* async function workoutExercises() {
+
+    let sql =
         `SELECT w.workout_id AS workout_id, w.plan_id AS plan_id, w.intensity, e.exercise_id, e.workout_id, e.plan_sets, e.plan_reps, e.plan_weight,e.exercise_name 
            FROM workouts w 
            LEFT JOIN exercises e ON w.workout_id = e.workout_id;`;
-    
-        const workouts = await db.get(sql);
-     //New JSON code from here
-        //const workout = await model.workoutExercises();
-        const workouts = workout.reduce((acc, row) => {
-            const { workout_id, plan_id,intensity } = row;
-          const exercise = {
+
+    const rows = await db.get(sql);
+    //New JSON code from here
+    //const workout = await model.workoutExercises();
+    const workouts = rows.reduce((acc, row) => {
+        const { workout_id, plan_id, intensity } = row;
+        const exercise = {
             exercise_name: row.exercise_name,
             exercise_id: row.exercise_id,
             workout_id: row.workout_id,
@@ -420,28 +634,28 @@ async function workoutExercises(){
             Plan_weight: row.paln_weight,
             rest: row.rest_time,
             //duration: row.duration
-          };
-            const existingWorkout = acc.find(workout => workout.workout_id === workout_id && workout.plan_id === plan_id);
-          if (existingWorkout) {
+        };
+        const existingWorkout = acc.find(workout => workout.workout_id === workout_id && workout.plan_id === plan_id);
+        if (existingWorkout) {
             existingWorkout.exercises.push(exercise);
-          } else {
+        } else {
             acc.push({
-              workout_id,
-              plan_id: plan_id,
-              intensity,
-              exercises: [exercise]
+                workout_id,
+                plan_id: plan_id,
+                intensity,
+                exercises: [exercise]
             });
-          }
-          
-          return acc;
-            
-        }, []);
+        }
+
+        return acc;
+
+    }, []);
 
     return workouts;
-         //res.json(workouts);
-        // To here, uncomment about to check but you will have to comment the other res.json
-        //If its not a simple fix lmk and ill change
-}
+    //res.json(workouts);
+    // To here, uncomment about to check but you will have to comment the other res.json
+    //If its not a simple fix lmk and ill change
+} */
 
 
 async function getPerformanceMetrics(planId) {
@@ -456,6 +670,16 @@ async function getPerformanceMetrics(planId) {
     `;
     return await db.all(query, [planId]);
 }
+
+
+// ADDED
+async function updateUserState(userId, fitGoal, expLevel) {
+    const query = `UPDATE users SET fit_goal = ?, exp_level = ? WHERE user_id = ?`;
+    const params = [fitGoal, expLevel, userId];
+    return await db.run(query, params);
+}
+
+
 
 
 module.exports = {
@@ -473,6 +697,9 @@ module.exports = {
     upsertQValue,
     getAllMuscles,
     getUser,
-    workoutExercises,
-    getPerformanceMetrics
+    //workoutExercises,
+    getPerformanceMetrics,
+
+    // ADDED
+    updateUserState
 };

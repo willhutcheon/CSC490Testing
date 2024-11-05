@@ -56,13 +56,16 @@ async function getRecommendedPlans(req, res, next) {
             plans: [recommendedPlan],
             user: { user_id: userId }
         }); */
+        
+        // KEEP AND USE
         res.json({
             status: "success",
             recommendedPlans: [recommendedPlan]
         });
+
         //New JSON code from here
-        const workout = await model.workoutExercises();
-         //res.json(workout);
+        // const workout = await model.workoutExercises();
+        //res.json(workout);
         // uncomment above to check but you will have to comment the other res.json out
         //If its not a simple fix lmk and ill change
     } catch (error) {
@@ -239,6 +242,7 @@ async function submitPlanFeedback(req, res) {
         // Pass aggregated metrics to determineNextState
         const nextState = determineNextState(state.fit_goal + state.exp_level, rating, { reps: totalReps, weightLifted: totalWeightLifted }, state.userPreferences);
 
+
         if (!nextState || typeof nextState !== 'string') {
             console.error(`Invalid next state derived from feedback: ${nextState}`);
             throw new Error('Invalid Next State');
@@ -251,7 +255,11 @@ async function submitPlanFeedback(req, res) {
         await model.updateQValue(userId, state.fit_goal + state.exp_level, Number(planId), reward, nextState);
 
         // Respond with success
-        res.status(200).send({ message: 'Feedback submitted successfully!' });
+        res.status(200).send({ 
+            message: 'Feedback submitted successfully!'
+            // ADDED
+            // currentState: nextState
+        });
     } catch (error) {
         console.error(`Error in submitPlanFeedback: ${error.message}`, {
             body: req.body,
