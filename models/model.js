@@ -97,7 +97,7 @@ async function getWorkoutPlans(userId) {
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
            w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
            e.plan_reps, e.plan_weight, e.rest_time, 
-           e.exercise_name, w.intensity, w.duration
+           e.exercise_name, e.duration, w.intensity
     FROM workout_plans wp
         JOIN workouts w ON wp.plan_id = w.plan_id
         JOIN exercises e ON w.workout_id = e.workout_id
@@ -131,7 +131,6 @@ async function getWorkoutPlans(userId) {
             workout = {
                 workout_id: row.workout_id,
                 intensity: row.intensity,
-                duration: row.duration,
                 exercises: []
             };
             plans[planId].workouts.push(workout);
@@ -145,7 +144,8 @@ async function getWorkoutPlans(userId) {
             plan_reps: row.plan_reps,
             plan_weight: row.plan_weight,
             rest_time: row.rest_time,
-            exercise_name: row.exercise_name
+            exercise_name: row.exercise_name,
+            duration: row.duration
         });
     });
 
