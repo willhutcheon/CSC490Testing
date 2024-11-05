@@ -1361,6 +1361,310 @@ CREATE TABLE IF NOT EXISTS workout_performance (
     )
     REFERENCES exercises (exercise_id) ON DELETE CASCADE
 );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   1,
+                                   1,
+                                   4,
+                                   10,
+                                    0,
+                                   '2024-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   2,
+                                   2,
+                                   3,
+                                   12,
+                                    90,
+                                   '2024-09-16 01:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   3,
+                                   3,
+                                   1,
+                                   0,
+                                    0,
+                                   '2023-08-17 03:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   4,
+                                   4,
+                                   1,
+                                   0,
+                                    0,
+                                   '2022-07-19 04:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   5,
+                                   5,
+                                   2,
+                                   10,
+                                    0,
+                                   '2021-11-19 05:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   6,
+                                   6,
+                                   4,
+                                   5,
+                                    180,
+                                   '2020-12-25 06:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   7,
+                                   7,
+                                   3,
+                                   4,
+                                    40,
+                                   '2023-02-11 07:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   8,
+                                   8,
+                                   5,
+                                   5,
+                                    8,
+                                   '2024-03-22 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   9,
+                                   9,
+                                   1,
+                                   0,
+                                    0,
+                                   '2022-07-19 02:47:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   10,
+                                   10,
+                                   3,
+                                   10,
+                                    25,
+                                   '2024-08-10 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   11,
+                                   11,
+                                   5,
+                                   10,
+                                    75,
+                                   '2023-09-19 03:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   12,
+                                   15,
+                                   5,
+                                   10,
+                                    50,
+                                   '2021-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   13,
+                                   16,
+                                   3,
+                                   10,
+                                    100,
+                                   '2024-10-19 05:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   14,
+                                   12,
+                                   5,
+                                   20,
+                                    5,
+                                   '2023-10-19 06:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   15,
+                                   13,
+                                   2,
+                                   5,
+                                    0,
+                                   '2021-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   16,
+                                   14,
+                                   1,
+                                   10,
+                                    0,
+                                   '2022-10-19 01:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   17,
+                                   17,
+                                   5,
+                                   25,
+                                    0,
+                                   '2023-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   18,
+                                   18,
+                                   4,
+                                   10,
+                                    20,
+                                   '2021-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   19,
+                                   19,
+                                   3,
+                                   10,
+                                    5,
+                                   '2022-10-19 02:46:06'
+                               );
 
 
 -- Table: workout_plans
