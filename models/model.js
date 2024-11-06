@@ -603,7 +603,7 @@ async function filterInjuries(workoutPlans, userID) {
     //filter
 }
 async function getUser(user_id) {
-    let sql = `SELECT u.user_id,u.fname,u.lname,u.username,u.email,u.fit_goal,u.exp_level,u.created_at,ui.muscle_id,m.muscle_name,m.muscle_position, ui.injury_intensity
+    let sql = `SELECT u.user_id,u.fname,u.lname,u.username,u.password,u.email,u.fit_goal,u.exp_level,u.created_at,ui.muscle_id,m.muscle_name,m.muscle_position, ui.injury_intensity
    FROM users u
        LEFT JOIN user_injury  ui ON ui.user_id = u.user_id
        LEFT JOIN muscle m ON ui.muscle_id = m.muscle_id
