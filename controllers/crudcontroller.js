@@ -9,15 +9,15 @@ app.use(express.json());
 const model = require("../models/crudmodel");
 
 async function createUser(req, res, next) {
-    let { user_id, fname, lname, username, email, fit_goal, exp_level } = req.body;
+    let { user_id, fname, lname, username, password, email, fit_goal, exp_level } = req.body;
     user_id = parseInt(user_id, 10);
-    console.log("Received parameters:", { user_id, fname, lname, username, email, fit_goal, exp_level });
+    console.log("Received parameters:", { user_id, fname, lname, username, password, email, fit_goal, exp_level });
     if (isNaN(user_id)) {
         console.error("user_id is not a number:", req.body.user_id);
         return res.status(400).send({ error: "User ID must be a number" });
     }
-    if (user_id && fname && lname && username && email && fit_goal && exp_level) {
-        let params = [user_id, fname, lname, username, email, fit_goal, exp_level, new Date().toISOString()];
+    if (user_id && fname && lname && username && password && email && fit_goal && exp_level) {
+        let params = [user_id, fname, lname, username, password, email, fit_goal, exp_level, new Date().toISOString()];
         console.log("Params for DB:", params);
         try {
             await model.createUser(params);
@@ -53,14 +53,14 @@ async function createPreferences(req, res, next) {
     }
 }
 async function updateUser(req, res, next) {
-    let { user_id, fname, lname, username, email, fit_goal, exp_level } = req.body;
+    let { user_id, fname, lname, username, password, email, fit_goal, exp_level } = req.body;
     user_id = parseInt(user_id, 10);
     if (isNaN(user_id)) {
         console.error("user_id is not a number:", req.body.user_id);
         return res.status(400).send({ error: "User ID must be a number" });
     }
-    if (fname && lname && username && email && fit_goal && exp_level) {
-        let params = [fname, lname, username, email, fit_goal, exp_level, user_id];
+    if (fname && lname && username && password && email && fit_goal && exp_level) {
+        let params = [fname, lname, username, password, email, fit_goal, exp_level, user_id];
         try {
             await model.updateUser(params);
             res.status(200).send({ message: "User updated successfully" });
