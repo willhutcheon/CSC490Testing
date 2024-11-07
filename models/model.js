@@ -90,7 +90,10 @@ async function getUserPreferences(userId) {
     return Object.values(plans);
 } */
 
-
+async function getLogin() {
+    let sql = "SELECT username, password FROM users;";
+    return await db.get(sql);
+}
 
 async function getWorkoutPlans(userId) {
     const sql = `
@@ -699,6 +702,7 @@ module.exports = {
     getUser,
     //workoutExercises,
     getPerformanceMetrics,
+    getLogin,
 
     // ADDED
     updateUserState
