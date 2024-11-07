@@ -191,7 +191,7 @@ async function getLogin(req,res){
         const { username, password } = req.body;
         // res.render("muscles-all", { muscle: muscle, title: 'All Muscles', muscles: req.muscles });
 
-        const results = await model.getLogin();
+        const results = await model.getLogin(username);
     } catch (error) {
         //console.error("Error fetching user:", err.message);
         res.status(500).send({ error: "Failed to fetch user data" });;
