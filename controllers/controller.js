@@ -186,7 +186,29 @@ async function getRecommendedPlans(req, res, next) {
 } */
 // WORKS
 
+async function getLogin(req,res){
+    try {
+        const { username, password } = req.body;
+        // res.render("muscles-all", { muscle: muscle, title: 'All Muscles', muscles: req.muscles });
 
+        const results = await model.getLogin();
+    } catch (error) {
+        //console.error("Error fetching user:", err.message);
+        res.status(500).send({ error: "Failed to fetch user data" });;
+    }
+    if (results.length === 0){
+        return res.status(400).send({ success: false, message: 'Invalid username or password' });
+    }else {
+        const user = results[0];
+        if (password === user.password){
+            return res.status(200).send({success: true, message: "Login successful"})
+        }else{
+            return res.status(400).send({ success: false, message: 'Invalid username or password' });
+
+        }
+        
+    }
+}
 
 async function getUser(req, res, next) {
     const user_id =req.params.user_id.replace ( /[^\d.]/g, '' );//replaces user_id= so we just get the id
@@ -346,7 +368,8 @@ module.exports = {
     submitPlanFeedback,
     determineNextState,
     getAllMuscles,
-    getUser
+    getUser,
+    getLogin
 };
 // Different plan, same state: Chosen when feedback is positive or performance doesn’t warrant a state change.
 // New state: Triggered by low feedback or high performance, suggesting either a new workout type (e.g., cardio) or a new level (e.g., intermediate).
