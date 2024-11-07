@@ -90,8 +90,8 @@ async function getUserPreferences(userId) {
     return Object.values(plans);
 } */
 
-async function getLogin() {
-    let sql = "SELECT username, password FROM users;";
+async function getLogin(username) {
+    let sql = "SELECT username, password FROM users WHERE username = ?;";
     return await db.get(sql);
 }
 
