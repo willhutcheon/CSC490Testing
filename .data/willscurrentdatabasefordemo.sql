@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS exercises (
     rest_time     INT           NOT NULL,
     exercise_name VARCHAR (255) NOT NULL
                                 DEFAULT 'Unknown',
+    duration     INT           NOT NULL,
+
     PRIMARY KEY (
         exercise_id
     ),
@@ -35,7 +37,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           1,
@@ -45,7 +48,8 @@ INSERT INTO exercises (
                           10,
                           100,
                           120,
-                          'Squat'
+                          'Squat',
+                            10
                       );
 
 INSERT INTO exercises (
@@ -56,7 +60,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           2,
@@ -66,7 +71,8 @@ INSERT INTO exercises (
                           12,
                           75,
                           90,
-                          'Bench Press'
+                          'Bench Press',
+                            5
                       );
 
 INSERT INTO exercises (
@@ -77,7 +83,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           3,
@@ -87,7 +94,8 @@ INSERT INTO exercises (
                           0,
                           0,
                           0,
-                          'Running'
+                          'Running',
+                            30
                       );
 
 INSERT INTO exercises (
@@ -98,7 +106,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           4,
@@ -108,7 +117,8 @@ INSERT INTO exercises (
                           0,
                           0,
                           0,
-                          'Treadmill'
+                          'Treadmill',
+                            60
                       );
 
 INSERT INTO exercises (
@@ -119,7 +129,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           5,
@@ -129,7 +140,8 @@ INSERT INTO exercises (
                           15,
                           0,
                           60,
-                          'Stationary Bike'
+                          'Stationary Bike',
+                            60
                       );
 
 INSERT INTO exercises (
@@ -140,7 +152,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           6,
@@ -150,8 +163,10 @@ INSERT INTO exercises (
                           5,
                           200,
                           180,
-                          'Deadlift'
+                          'Deadlift',
+                            5
                       );
+
 
 INSERT INTO exercises (
                           exercise_id,
@@ -161,7 +176,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           7,
@@ -171,7 +187,8 @@ INSERT INTO exercises (
                           4,
                           40,
                           50,
-                          'Hammer Curl'
+                          'Hammer Curl',
+                            15
                       );
 
 INSERT INTO exercises (
@@ -182,7 +199,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           8,
@@ -192,7 +210,8 @@ INSERT INTO exercises (
                           8,
                           10,
                           60,
-                          'Bicep Curl'
+                          'Bicep Curl',
+                            15
                       );
 
 INSERT INTO exercises (
@@ -203,7 +222,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           9,
@@ -213,7 +233,8 @@ INSERT INTO exercises (
                           0,
                           0,
                           0,
-                          'Cycling'
+                          'Cycling',
+                            60
                       );
 
 INSERT INTO exercises (
@@ -224,7 +245,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           10,
@@ -234,7 +256,8 @@ INSERT INTO exercises (
                           10,
                           25,
                           60,
-                          'Concentration Curl'
+                          'Concentration Curl',
+                            15
                       );
 
 INSERT INTO exercises (
@@ -245,7 +268,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           11,
@@ -255,7 +279,8 @@ INSERT INTO exercises (
                           10,
                           100,
                           20,
-                          'Row'
+                          'Row',
+                            15
                       );
 
 INSERT INTO exercises (
@@ -266,7 +291,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           15,
@@ -276,7 +302,8 @@ INSERT INTO exercises (
                           10,
                           100,
                           20,
-                          'Calf Raises'
+                          'Calf Raises',
+                            10
                       );
 
 INSERT INTO exercises (
@@ -287,7 +314,8 @@ INSERT INTO exercises (
                           plan_reps,
                           plan_weight,
                           rest_time,
-                          exercise_name
+                          exercise_name,
+                            duration
                       )
                       VALUES (
                           16,
@@ -297,9 +325,142 @@ INSERT INTO exercises (
                           10,
                           100,
                           10,
-                          'Squat'
+                          'Squat',
+                            10
+                      );
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name,
+                            duration
+                      )
+                      VALUES (
+                          12,
+                          22,
+                          112,
+                          5,
+                          25,
+                          5,
+                          20,
+                          'Sit-ups',
+                            15
+                      );
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name,
+                            duration
+                      )
+                      VALUES (
+                          13,
+                          22,
+                          113,
+                          2,
+                          10,
+                          0,
+                          20,
+                          'Box Jumps',
+                            10
                       );
 
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name,
+                            duration
+                      )
+                      VALUES (
+                          14,
+                          22,
+                          114,
+                          1,
+                          10,
+                          0,
+                          15,
+                          'Pull ups',
+                            10
+                      );
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name,
+                            duration
+                      )
+                      VALUES (
+                          17,
+                          23,
+                          115,
+                          5,
+                          20,
+                          0,
+                          30,
+                          'Push Ups',
+                            15
+                      );
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name,
+                            duration
+                      )
+                      VALUES (
+                          18,
+                          23,
+                          116,
+                          3,
+                          10,
+                          20,
+                          30,
+                          'Tricep Pull Down',
+                            15
+                      );
+INSERT INTO exercises (
+                          exercise_id,
+                          workout_id,
+                          api_id,
+                          plan_sets,
+                          plan_reps,
+                          plan_weight,
+                          rest_time,
+                          exercise_name,
+                            duration
+                      )
+                      VALUES (
+                          19,
+                          23,
+                          117,
+                          3,
+                          10,
+                          0,
+                          15,
+                          'Bench Dips',
+                            15
+                      );
 
 -- Table: feedback
 CREATE TABLE IF NOT EXISTS feedback (
@@ -1069,6 +1230,7 @@ CREATE TABLE IF NOT EXISTS users (
     fname      VARCHAR (50)  NOT NULL,
     lname      VARCHAR (50)  NOT NULL,
     username   VARCHAR (50)  NOT NULL,
+    password    VARCHAR(50) NOT NULL UNIQUE,
     email      VARCHAR (255) NOT NULL,
     fit_goal   VARCHAR (255) NOT NULL,
     exp_level  VARCHAR (50)  NOT NULL,
@@ -1083,6 +1245,7 @@ INSERT INTO users (
                       fname,
                       lname,
                       username,
+                        password,
                       email,
                       fit_goal,
                       exp_level,
@@ -1092,7 +1255,8 @@ INSERT INTO users (
                       7572,
                       'Ursa',
                       'Moses',
-                      'Joseph F. Dudley',
+                      'User1',
+                        'User1',
                       'vulputate.dui.nec@icloud.ca',
                       'Strength',
                       'Beginner',
@@ -1104,6 +1268,7 @@ INSERT INTO users (
                       fname,
                       lname,
                       username,
+                        password,
                       email,
                       fit_goal,
                       exp_level,
@@ -1113,7 +1278,8 @@ INSERT INTO users (
                       9014,
                       'Nora',
                       'Anthony',
-                      'Nadine L. Harrison',
+                      'User2',
+                        'User2',
                       'nunc.sed@aol.com',
                       'Endurance',
                       'Advanced',
@@ -1125,6 +1291,7 @@ INSERT INTO users (
                       fname,
                       lname,
                       username,
+                        password,
                       email,
                       fit_goal,
                       exp_level,
@@ -1134,7 +1301,8 @@ INSERT INTO users (
                       2710,
                       'Lucius',
                       'Puckett',
-                      'Benedict Y. Meadows',
+                      'User3',
+                        'User3',
                       'cras.sed@yahoo.net',
                       'Hypertrophy',
                       'Beginner',
@@ -1146,6 +1314,7 @@ INSERT INTO users (
                       fname,
                       lname,
                       username,
+                        password,
                       email,
                       fit_goal,
                       exp_level,
@@ -1155,7 +1324,8 @@ INSERT INTO users (
                       3601,
                       'Connor',
                       'Hurst',
-                      'Chaim D. Guy',
+                      'User4',
+                        'User4',
                       'vel.arcu@aol.net',
                       'Strength',
                       'Advanced',
@@ -1167,6 +1337,7 @@ INSERT INTO users (
                       fname,
                       lname,
                       username,
+                        password,
                       email,
                       fit_goal,
                       exp_level,
@@ -1176,7 +1347,8 @@ INSERT INTO users (
                       2624,
                       'Lila',
                       'Jacobson',
-                      'Bryar Y. Richards',
+                      'User5',
+                        'User5',
                       'egestas.urna@icloud.net',
                       'Endurance',
                       'intermediate',
@@ -1200,6 +1372,310 @@ CREATE TABLE IF NOT EXISTS workout_performance (
     )
     REFERENCES exercises (exercise_id) ON DELETE CASCADE
 );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   1,
+                                   1,
+                                   4,
+                                   10,
+                                    0,
+                                   '2024-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   2,
+                                   2,
+                                   3,
+                                   12,
+                                    90,
+                                   '2024-09-16 01:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   3,
+                                   3,
+                                   1,
+                                   0,
+                                    0,
+                                   '2023-08-17 03:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   4,
+                                   4,
+                                   1,
+                                   0,
+                                    0,
+                                   '2022-07-19 04:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   5,
+                                   5,
+                                   2,
+                                   10,
+                                    0,
+                                   '2021-11-19 05:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   6,
+                                   6,
+                                   4,
+                                   5,
+                                    180,
+                                   '2020-12-25 06:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   7,
+                                   7,
+                                   3,
+                                   4,
+                                    40,
+                                   '2023-02-11 07:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   8,
+                                   8,
+                                   5,
+                                   5,
+                                    8,
+                                   '2024-03-22 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   9,
+                                   9,
+                                   1,
+                                   0,
+                                    0,
+                                   '2022-07-19 02:47:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   10,
+                                   10,
+                                   3,
+                                   10,
+                                    25,
+                                   '2024-08-10 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   11,
+                                   11,
+                                   5,
+                                   10,
+                                    75,
+                                   '2023-09-19 03:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   12,
+                                   15,
+                                   5,
+                                   10,
+                                    50,
+                                   '2021-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   13,
+                                   16,
+                                   3,
+                                   10,
+                                    100,
+                                   '2024-10-19 05:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   14,
+                                   12,
+                                   5,
+                                   20,
+                                    5,
+                                   '2023-10-19 06:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   15,
+                                   13,
+                                   2,
+                                   5,
+                                    0,
+                                   '2021-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   16,
+                                   14,
+                                   1,
+                                   10,
+                                    0,
+                                   '2022-10-19 01:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   17,
+                                   17,
+                                   5,
+                                   25,
+                                    0,
+                                   '2023-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   18,
+                                   18,
+                                   4,
+                                   10,
+                                    20,
+                                   '2021-10-19 02:46:06'
+                               );
+INSERT INTO workout_performance (
+                                   perf_id,
+                                   exercise_id,
+                                   actual_sets,
+                                   actual_reps,
+                                   actual_weight,
+                                    perf_date
+                               )
+                               VALUES (
+                                   19,
+                                   19,
+                                   3,
+                                   10,
+                                    5,
+                                   '2022-10-19 02:46:06'
+                               );
 
 
 -- Table: workout_plans
@@ -1315,9 +1791,7 @@ CREATE TABLE IF NOT EXISTS workouts (
     workout_id    INT  NOT NULL
                        UNIQUE,
     plan_id       INT  NOT NULL,
-    exercise_name TEXT NOT NULL,
     intensity     TEXT NOT NULL,
-    duration      INT  NOT NULL,
     PRIMARY KEY (
         workout_id
     ),
@@ -1330,211 +1804,175 @@ CREATE TABLE IF NOT EXISTS workouts (
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          1,
                          1,
-                         'Squat',
-                         'High',
-                         60
-                     );
+                         'High'
+    );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          2,
                          1,
-                         'Bench Press',
-                         'High',
-                         60
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          3,
                          2,
-                         'Running',
-                         'Low',
-                         30
+                         'Low'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          4,
                          2,
-                         'Treadmill',
-                         'Low',
-                         30
+                         'Low'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          5,
                          3,
-                         'Cycling',
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          6,
                          3,
-                         'Stationary Bike',
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          7,
                          4,
-                         'Deadlift',
-                         'High',
-                         90
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          8,
                          5,
-                         'Cycling',
-                         'Medium',
-                         45
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          11,
                          4,
-                         'Hammer Curl',
-                         'High',
-                         20
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          12,
                          4,
-                         'Bicep Curl',
-                         'High',
-                         60
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          13,
                          3,
-                         'Concentration Curl',
-                         'Medium',
-                         60
+                         'Medium'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          14,
                          4,
-                         'Row',
-                         'High',
-                         20
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          15,
                          6,
-                         'Squat',
-                         'High',
-                         60
+                         'High'
                      );
 
 INSERT INTO workouts (
                          workout_id,
                          plan_id,
-                         exercise_name,
-                         intensity,
-                         duration
+                         intensity
                      )
                      VALUES (
                          16,
                          6,
-                         'Calf Raises',
-                         'High',
-                         50
+                         'High'
+                     );
+INSERT INTO workouts (
+                         workout_id,
+                         plan_id,
+                         intensity
+                     )
+                     VALUES (
+                         22,
+                         4,
+                         'Medium'
+                     );
+INSERT INTO workouts (
+                         workout_id,
+                         plan_id,
+                         intensity
+                     )
+                     VALUES (
+                         23,
+                         4,
+                         'High'
                      );
 
 
