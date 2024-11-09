@@ -684,13 +684,13 @@ async function updateUserState(userId, fitGoal, expLevel) {
 
 async function getWorkoutPerformance(userId) {
     const sql = `
-        SELECT *
-        FROM workout_performance wp
+        SELECT e.exercise_name, e.plan_reps, wp.actual_reps, e.plan_sets,wp.actual_sets,e.plan_weight,wp.actual_weight
+    FROM workout_performance wp
         JOIN exercises e ON wp.exercise_id = e.exercise_id
         JOIN workouts w ON w.workout_id = e.workout_id
         JOIN workout_plans ww ON ww.plan_id = w.plan_id
         JOIN users u ON u.user_id = ww.user_id
-        WHERE u.user_id = ?;
+    WHERE u.user_id = ?;
     `;
     return await db.get(sql, [userId]);
 }
