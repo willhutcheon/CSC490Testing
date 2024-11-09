@@ -682,7 +682,18 @@ async function updateUserState(userId, fitGoal, expLevel) {
     return await db.run(query, params);
 }
 
-
+async function getWorkoutPerformance(userId) {
+    const sql = `
+        SELECT *
+        FROM workout_performance wp
+        JOIN exercises e ON wp.exercise_id = e.exercise_id
+        JOIN workouts w ON w.workout_id = e.workout_id
+        JOIN workout_plans ww ON ww.plan_id = w.plan_id
+        JOIN users u ON u.user_id = ww.user_id
+        WHERE u.user_id = ?;
+    `;
+    return await db.get(sql, [userId]);
+}
 
 
 module.exports = {
@@ -703,6 +714,7 @@ module.exports = {
     //workoutExercises,
     getPerformanceMetrics,
     getLogin,
+    getWorkoutPerformance,
 
     // ADDED
     updateUserState
