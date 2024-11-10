@@ -95,6 +95,161 @@ async function getLogin(username) {
     return await db.get(sql);
 }
 
+
+
+
+
+async function getWorkoutPlanDetails(planId) {
+    const sql = `
+    SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
+           w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
+           e.plan_reps, e.plan_weight, e.rest_time, 
+           e.exercise_name, e.duration, w.intensity
+    FROM workout_plans wp
+        JOIN workouts w ON wp.plan_id = w.plan_id
+        JOIN exercises e ON w.workout_id = e.workout_id
+    WHERE wp.plan_id = ? AND wp.active = true;
+    `;
+
+    try {
+        const results = await db.all(sql, [planId]);
+
+        // ADDED, REMOVE?
+        /* results.forEach(result => {
+            const planId = result.plan_id;
+        }); */
+
+        //const planId = results[0].plan_id;
+
+        //const planId = results.length > 0 ? results[0].plan_id : null;
+        console.log('planId in SQL:', planId);
+
+
+
+        // Group workouts and exercises by workout_id
+        const workoutPlans = results.reduce((acc, row) => {
+            const { workout_id, exercise_id, exercise_name, plan_sets, plan_reps, plan_weight, rest_time, api_id, intensity, duration, plan_id, start_date, end_date, active } = row;
+
+            // Find or create a workout plan object
+            let workoutPlan = acc.find(plan => plan.plan_id === plan_id);
+            if (!workoutPlan) {
+                workoutPlan = {
+                    plan_id,
+                    start_date,
+                    end_date,
+                    active,
+                    workouts: []
+                };
+                acc.push(workoutPlan);
+            }
+
+            // Find or create a workout object
+            let workout = workoutPlan.workouts.find(w => w.workout_id === workout_id);
+            if (!workout) {
+                workout = {
+                    workout_id,
+                    exercise_name,
+                    intensity,
+                    duration,
+                    exercises: []
+                };
+                workoutPlan.workouts.push(workout);
+            }
+
+            // Add exercise to the workout
+            workout.exercises.push({
+                exercise_id,
+                api_id,
+                plan_sets,
+                plan_reps,
+                plan_weight,
+                rest_time,
+                exercise_name
+            });
+
+            return acc;
+        }, []);
+
+        // Return the structured response
+        return { status: "success", workoutPlans };
+    } catch (error) {
+        console.error("Error fetching workout plan details:", error);
+        return { status: "error", message: "Error fetching workout plan details" };
+    }
+}
+/* async function getWorkoutPlanDetails(planId) {
+    const sql = `
+    SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
+           w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
+           e.plan_reps, e.plan_weight, e.rest_time, 
+           e.exercise_name, e.duration, w.intensity
+    FROM workout_plans wp
+        JOIN workouts w ON wp.plan_id = w.plan_id
+        JOIN exercises e ON w.workout_id = e.workout_id
+    WHERE wp.plan_id = ? AND wp.active = true;
+    `;
+
+    try {
+        const rows = await db.all(sql, [planId]);
+
+        console.log('Raw SQL Result Rows:', rows);
+
+        const plans = {};  // Object to group plan details
+
+        rows.forEach(row => {
+            const planId = row.plan_id;  // Store plan_id in planId variable
+
+            // Create a new plan if it doesn’t already exist in `plans`
+            if (!plans[planId]) {
+                plans[planId] = {
+                    plan_id: planId,
+                    start_date: row.start_date,
+                    end_date: row.end_date,
+                    active: row.active,
+                    workouts: []
+                };
+            }
+
+            // Find or create the workout within the plan's workouts array
+            let workout = plans[planId].workouts.find(w => w.workout_id === row.workout_id);
+            if (!workout) {
+                workout = {
+                    workout_id: row.workout_id,
+                    intensity: row.intensity,
+                    duration: row.duration,
+                    exercises: []
+                };
+                plans[planId].workouts.push(workout);
+            }
+
+            // Add exercise details to the workout's exercises array
+            workout.exercises.push({
+                exercise_id: row.exercise_id,
+                api_id: row.api_id,
+                plan_sets: row.plan_sets,
+                plan_reps: row.plan_reps,
+                plan_weight: row.plan_weight,
+                rest_time: row.rest_time,
+                exercise_name: row.exercise_name
+            });
+        });
+
+        console.log('Structured Plans Object:', plans);
+
+        // Return the structured response
+        return { status: "success", workoutPlans: Object.values(plans) };
+    } catch (error) {
+        console.error("Error fetching workout plan details:", error);
+        return { status: "error", message: "Error fetching workout plan details" };
+    }
+} */
+
+
+
+
+
+
+
 async function getWorkoutPlans(userId) {
     const sql = `
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
@@ -171,12 +326,21 @@ async function getUserPlanFeedback(userId, planId) {
 
 
 // Fetch user feedback for a workout plan
+// KEEP, WORKS
 async function getUserPlanFeedback(userId, planId) {
+    if (typeof userId !== 'number' || typeof planId !== 'number') {
+        console.error("Invalid userId or planId type:", { userId, planId });
+        return null;  // Handle error or return empty/null if invalid
+    }
     const sql = `
         SELECT rating, total_calories_burned 
         FROM user_plan_feedback 
         WHERE user_id = ? AND plan_id = ?;
     `;
+
+    const feedback = await db.get(sql, [userId, planId]);
+    console.log("Feedback in getUserPlanFeedback:", feedback);
+
     return await db.get(sql, [userId, planId]);
 }
 
@@ -233,13 +397,28 @@ let QTable = {};
 } */
 
 // ADDED, above works
-async function getQValue(userId, state, action) {
+/* async function getQValue(userId, state, action) {
     const sql = `
         SELECT q_value
         FROM q_values
         WHERE user_id = ? AND state = ? AND action = ?;
     `;
     const result = await db.get(sql, [userId, state, action]);
+    return result ? result.q_value : 0; // Return the Q-value if found, otherwise return 0
+} */
+async function getQValue(userId, state, action) {
+    if (typeof userId !== 'number' || typeof state !== 'string' || typeof action !== 'number') {
+        console.error("Invalid parameter types:", { userId, state, action });
+        return 0;
+    }
+    const sql = `
+        SELECT q_value
+        FROM q_values
+        WHERE user_id = ? AND state = ? AND action = ?;
+    `;
+    console.log(`Inputs - userId: ${userId}, state: ${state}, action: ${action}`);
+    const result = await db.get(sql, [userId, state, action]);
+    console.log(`SQL in getQvalue: ${result}`);
     return result ? result.q_value : 0; // Return the Q-value if found, otherwise return 0
 }
 
@@ -336,9 +515,217 @@ function calculateReward(feedback) {
 }
 
 
+
+
+async function chooseAction(userId, state) {
+    if (typeof userId !== 'number' || typeof state !== 'string') {
+        console.error("Invalid parameter types:", { userId, state });
+        return null;
+    }
+
+    const sql = `
+        SELECT action, q_value
+        FROM q_values
+        WHERE user_id = ? AND state = ?;
+    `;
+
+    try {
+        const actions = await db.all(sql, [userId, state]); // Retrieve all actions for the state
+
+        if (!actions || actions.length === 0) {
+            console.log("No actions found for this user and state.");
+            return null;
+        }
+
+        // Find the action with the highest Q-value
+        let bestAction = actions[0];
+        for (const action of actions) {
+            if (action.q_value > bestAction.q_value) {
+                bestAction = action;
+            }
+        }
+
+        console.log(`Selected action: ${bestAction.action} with Q-value: ${bestAction.q_value}`);
+
+        // Fetch the full workout plan details using the selected action (plan_id)
+        const planSql = `
+            SELECT * 
+            FROM workout_plans 
+            WHERE plan_id = ?;
+        `;
+
+        const plan = await db.get(planSql, [bestAction.action]); // Fetch the full plan based on plan_id
+
+        if (!plan) {
+            console.log("No plan found for plan_id:", bestAction.action);
+            return null;
+        }
+
+        console.log("Fetched full workout plan:", plan);
+        return plan; // Return the full workout plan object
+    } catch (error) {
+        console.error("Error in chooseAction:", error);
+        return null;
+    }
+}
+// KEEP
+/* async function chooseAction(userId, state) {
+    if (typeof userId !== 'number' || typeof state !== 'string') {
+        console.error("Invalid parameter types:", { userId, state });
+        return null;
+    }
+
+    const sql = `
+        SELECT action, q_value
+        FROM q_values
+        WHERE user_id = ? AND state = ?;
+    `;
+
+    try {
+        const actions = await db.all(sql, [userId, state]); // Retrieve all actions for the state
+
+        if (!actions || actions.length === 0) {
+            console.log("No actions found for this user and state.");
+            return null;
+        }
+
+        // Find the action with the highest Q-value
+        let bestAction = actions[0];
+        for (const action of actions) {
+            if (action.q_value > bestAction.q_value) {
+                bestAction = action;
+            }
+        }
+
+        console.log(`Selected action: ${bestAction.action} with Q-value: ${bestAction.q_value}`);
+        return bestAction.action; // Return the action with the highest Q-value
+    } catch (error) {
+        console.error("Error in chooseAction:", error);
+        return null;
+    }
+} */
+
+
+
+
+
+
+
+/* async function chooseAction(userId, state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+  
+    // Validate inputs
+    if (!userId || typeof userId !== 'number' || !state || typeof state !== 'string' || !availablePlans || !Array.isArray(availablePlans) || availablePlans.length === 0) {
+      console.error('Invalid inputs to chooseAction:', { userId, state, availablePlansLength: availablePlans?.length });
+      throw new Error('Invalid inputs to chooseAction');
+    }
+  
+    // Fetch and log Q-values for available plans
+    const planQValues = await Promise.all(
+      availablePlans.map(async (plan) => ({
+        plan,
+        qValue: await getQValue(userId, state, plan.plan_id)
+      }))
+    );
+  
+    planQValues.forEach(({ plan, qValue }) => {
+      console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+    });
+  
+    if (Math.random() < epsilon) {
+      // Exploration: choose a random workout plan
+      const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+      console.log(`Exploring: Randomly selected plan ${randomPlan.plan_id}`);
+      return randomPlan;
+    } else {
+      // Exploitation: choose the plan with highest Q-value
+      const bestPlanData = planQValues.reduce((best, current) => {
+        return (current.qValue > best.qValue) ? current : best;
+      }, null);
+  
+      if (bestPlanData) {
+        console.log(`Exploiting: Selected plan ${bestPlanData.plan.plan_id} with Q-value ${bestPlanData.qValue}`);
+        return bestPlanData.plan;
+      } else {
+        console.log("No available plans to choose from.");
+        return null;
+      }
+    }
+  } */
+
+// NO DETERMINE NEXT STATE
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    // Log available plans and their Q-values
+    for (const plan of availablePlans) {
+        const qValue = await getQValue(state, plan.plan_id);
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+    }
+
+    if (Math.random() < epsilon) {
+        // Exploration: choose a random workout plan
+        const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+        console.log(`Choosing random plan: ${randomPlan.plan_id}`);
+        return randomPlan;
+    } else {
+        // Exploitation: choose the workout plan with the highest Q-value
+        const bestPlan = await availablePlans.reduce(async (bestActionPromise, plan) => {
+            const bestAction = await bestActionPromise;
+            const qValue = await getQValue(state, plan.plan_id);
+            console.log(`Evaluating Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+            return (!bestAction || qValue > await getQValue(state, bestAction.plan_id)) ? plan : bestAction;
+        }, Promise.resolve(null));
+
+        if (bestPlan) {
+            const bestQValue = await getQValue(state, bestPlan.plan_id);
+            console.log(`Best Plan ID: ${bestPlan.plan_id}, Best Q-Value: ${bestQValue}`);
+        } else {
+            console.log("No available plans to choose from.");
+        }
+
+        return bestPlan;
+    }
+} */
+// MIGHT WORK?
+/* async function chooseAction(state, availablePlans) {
+    const epsilon = 0.1; // Exploration-exploitation trade-off
+
+    // Fetch and log Q-values for available plans
+    const planQValues = await Promise.all(
+        availablePlans.map(async (plan) => ({
+            plan,
+            qValue: await getQValue(state, plan.plan_id)
+        }))
+    );
+
+    planQValues.forEach(({ plan, qValue }) => {
+        console.log(`Available Plan ID: ${plan.plan_id}, Q-Value: ${qValue}`);
+    });
+
+    if (Math.random() < epsilon) {
+        // Exploration: choose a random workout plan
+        const randomPlan = availablePlans[Math.floor(Math.random() * availablePlans.length)];
+        console.log(`Choosing random plan: ${randomPlan.plan_id}`);
+        return randomPlan;
+    } else {
+        // Exploitation: choose the workout plan with the highest Q-value
+        const bestPlan = planQValues.reduce((bestAction, { plan, qValue }) => {
+            return (!bestAction || qValue > bestAction.qValue) ? { plan, qValue } : bestAction;
+        }, null);
+
+        if (bestPlan) {
+            console.log(`Best Plan ID: ${bestPlan.plan.plan_id}, Best Q-Value: ${bestPlan.qValue}`);
+        } else {
+            console.log("No available plans to choose from.");
+        }
+
+        return bestPlan?.plan;
+    }
+} */
 // KEEP THIS
 // Choose the best workout plan (action) based on current state and Q-values
-function chooseAction(state, availablePlans) {
+/* function chooseAction(state, availablePlans) {
     const epsilon = 0.1; // Exploration-exploitation trade-off
 
     availablePlans.forEach(plan => {
@@ -362,7 +749,15 @@ function chooseAction(state, availablePlans) {
             return (!bestAction || qValue > getQValue(state, bestAction.plan_id)) ? plan : bestAction;
         }, null);
     }
-}
+} */
+
+
+
+
+
+
+
+
 
 // USE?
 /* async function chooseAction(state, availablePlans) {
@@ -490,62 +885,64 @@ function chooseAction(state, availablePlans) {
 
 
 
-
 function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
-
-
-    // NEED THIS EVENTUALLY
-    // Check for manual preference adjustments from userPreferences
-    /* if (userPreferences.updated) {
-        // If the user manually updated their preferences, change the state accordingly
-        nextState = `${userPreferences.goal}${userPreferences.level}`;
-    } */
-
-
-    console.log(`Test Current State viewing: ${currentState}`);
-    console.log(`Performance Metrics in determineNextState viewing: ${JSON.stringify(performanceMetrics)}`);
-    console.log(`Current State viewing: ${currentState}`);
-    console.log(`Feedback viewing: ${JSON.stringify(feedback)}`);
-
-
-    // Define thresholds for feedback and performance
-    const feedbackThreshold = 3; // Threshold for low ratings triggering a state change
-    const performanceThreshold = 5; // Threshold for performance improvement triggering state progression
-
-    // Example state mappings based on feedback and performance
-    const stateMapping = {
-        "StrengthBeginner": "StrengthIntermediate",
-        "StrengthIntermediate": "StrengthAdvanced",
-        "CardioBeginner": "CardioIntermediate",
-        "CardioIntermediate": "CardioAdvanced",
-
-        // ADDED
-        "StrengthAdvanced": "StrengthBeginner"
-    };
-
-    let nextState = currentState;
-
-    // Evaluate user feedback (positive or negative)
-    if (feedback.rating < feedbackThreshold) {
-        // If feedback is consistently low, consider transitioning to a different workout focus or difficulty level
-        if (currentState.includes("Strength")) {
-            nextState = "CardioBeginner"; // Transition to cardio if strength is poorly rated
-        } else if (currentState.includes("Cardio")) {
-            nextState = "StrengthBeginner"; // Transition to strength if cardio is poorly rated
-        }
-    } else if (feedback.rating >= feedbackThreshold && feedback.rating <= 5) {
-        // Check performance metrics for improvement
-        if (performanceMetrics.reps > performanceThreshold) {
-            // If performance is improving, upgrade the state
-            nextState = stateMapping[currentState] || currentState; // Move to the next level if available
-        }
-    }
-
-    // Further customization based on user preferences can be added here
-    // For instance, if user prefers higher intensity, we could adjust the nextState accordingly.
-
-    return nextState;
+    return currentState;
 }
+//function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
+
+
+// NEED THIS EVENTUALLY
+// Check for manual preference adjustments from userPreferences
+/* if (userPreferences.updated) {
+    // If the user manually updated their preferences, change the state accordingly
+    nextState = `${userPreferences.goal}${userPreferences.level}`;
+} */
+
+
+/* console.log(`Test Current State viewing: ${currentState}`);
+console.log(`Performance Metrics in determineNextState viewing: ${JSON.stringify(performanceMetrics)}`);
+console.log(`Current State viewing: ${currentState}`);
+console.log(`Feedback viewing: ${JSON.stringify(feedback)}`);
+
+
+// Define thresholds for feedback and performance
+const feedbackThreshold = 3; // Threshold for low ratings triggering a state change
+const performanceThreshold = 5; // Threshold for performance improvement triggering state progression
+
+// Example state mappings based on feedback and performance
+const stateMapping = {
+    "StrengthBeginner": "StrengthIntermediate",
+    "StrengthIntermediate": "StrengthAdvanced",
+    "CardioBeginner": "CardioIntermediate",
+    "CardioIntermediate": "CardioAdvanced",
+
+    // ADDED
+    "StrengthAdvanced": "StrengthBeginner"
+};
+
+let nextState = currentState;
+
+// Evaluate user feedback (positive or negative)
+if (feedback.rating < feedbackThreshold) {
+    // If feedback is consistently low, consider transitioning to a different workout focus or difficulty level
+    if (currentState.includes("Strength")) {
+        nextState = "CardioBeginner"; // Transition to cardio if strength is poorly rated
+    } else if (currentState.includes("Cardio")) {
+        nextState = "StrengthBeginner"; // Transition to strength if cardio is poorly rated
+    }
+} else if (feedback.rating >= feedbackThreshold && feedback.rating <= 5) {
+    // Check performance metrics for improvement
+    if (performanceMetrics.reps > performanceThreshold) {
+        // If performance is improving, upgrade the state
+        nextState = stateMapping[currentState] || currentState; // Move to the next level if available
+    }
+}
+
+// Further customization based on user preferences can be added here
+// For instance, if user prefers higher intensity, we could adjust the nextState accordingly.
+
+return nextState;
+} */
 
 
 async function injuryFilter(userId) {
@@ -562,8 +959,46 @@ async function injuryFilter(userId) {
 }
 
 
-
+// NO DETERMINE NEXT STATE
 async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
+    const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
+    const availablePlans = workoutPlans;
+
+    // Choose a workout plan (action) based on the current state
+    //const recommendedPlan = await chooseAction(state, availablePlans);
+    const recommendedPlan = await chooseAction(userId, state);
+    if (!recommendedPlan || !recommendedPlan.plan_id) {
+        console.log("Invalid recommendedPlan:", recommendedPlan);
+        return { error: "No valid plan recommended." };
+    }
+
+    console.log("Feedback in recommendWorkoutPlansWithRL:");
+    // Get feedback after the plan is completed
+    const feedback = await getUserPlanFeedback(userId, recommendedPlan.plan_id);
+    //const feedback = await getUserPlanFeedback(userId, recommendedPlan);
+
+
+    console.log("Feedback:", feedback); // Log the feedback to see if it's undefined or missing properties
+    const reward = calculateReward(feedback);
+    console.log(`Reward for User ID: ${userId}, Plan ID: ${recommendedPlan.plan_id}: ${reward}`);
+    //console.log(`Reward for User ID: ${userId}, Plan ID: ${recommendedPlan}: ${reward}`);
+
+
+    // Use the current state as the next state
+    const nextState = state;
+
+    console.log(`State: ${state}, Next State: ${nextState}, Feedback Rating: ${feedback.rating}`);
+
+    // Update Q-value based on feedback and new state
+    await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
+    //await updateQValue(userId, state, recommendedPlan, reward, nextState);
+
+
+    //return recommendedPlan;
+    const workoutPlan = await getWorkoutPlanDetails(recommendedPlan.plan_id);
+    return workoutPlan;
+}
+/* async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId) {
     const state = String(userPreferences.fit_goal) + String(userPreferences.exp_level);
     const availablePlans = workoutPlans;//Here or one step back
 
@@ -593,7 +1028,7 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
     await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
 
     return recommendedPlan;
-}
+} */
 async function getAllMuscles() {
     let sql = "SELECT * FROM muscle;";
     return await db.all(sql);
@@ -705,5 +1140,7 @@ module.exports = {
     getLogin,
 
     // ADDED
-    updateUserState
+    updateUserState,
+
+    getWorkoutPlanDetails
 };
