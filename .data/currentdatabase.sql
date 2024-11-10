@@ -1104,8 +1104,288 @@ CREATE TABLE IF NOT EXISTS workout_performance (
     )
     REFERENCES exercises (exercise_id) ON DELETE CASCADE
 );
+--Squats for day 2024-01-01 11:32:12
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES (
+        1,
+        1,
+        3,
+        7,
+        100,
+        '2024-01-01 11:32:12'
+    );
 
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        2,
+        1,
+        3,
+        8,
+        100,
+        '2024-01-01 11:33:42'
+    );
 
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        3,
+        1,
+        3,
+        8,
+        100,
+        '2024-01-01 11:34:52'
+    );
+--Squats for day 2024-01-04 11:32:12
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        4,
+        1,
+        4,
+        8,
+        100,
+        '2024-01-04 12:05:05'
+    );
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        5,
+        1,
+        4,
+        8,
+        100,
+        '2024-01-04 12:07:01'
+    );
+
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        6,
+        1,
+        4,
+        7,
+        100,
+        '2024-01-04 12:08:12'
+    );
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        7,
+        1,
+        4,
+        8,
+        100,
+        '2024-01-04 12:09:50'
+    );
+--Squats for day 2024-01-08 10:50:05
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        8,
+        1,
+        3,
+        10,
+        100,
+        '2024-01-08 10:50:05'
+    );
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        9,
+        1,
+        3,
+        7,
+        100,
+        '2024-01-08 10:52:00'
+    );
+
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        10,
+        1,
+        3,
+        9,
+        100,
+        '2024-01-08 10:54:12'
+    );
+--Squats for day 2024-01-12 11:12:13
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        11,
+        1,
+        3,
+        5,
+        110,
+        '2024-01-12 11:12:13'
+    );
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        12,
+        1,
+        3,
+        4,
+        110,
+        '2024-01-12 11:14:23'
+    );
+
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        13,
+        1,
+        3,
+        4,
+        110,
+        '2024-01-12 11:15:43'
+    );
+
+--Squats for day 2024-01-16 12:01:07
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        14,
+        1,
+        5,
+        3,
+        110,
+        '2024-01-16 12:01:07'
+    );
+
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        15,
+        1,
+        5,
+        10,
+        110,
+        '2024-01-16 12:08:07'
+    );
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        16,
+        1,
+        5,
+        7,
+        110,
+        '2024-01-16 12:09:08'
+    );
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        17,
+        1,
+        5,
+        8,
+        110,
+        '2024-01-16 12:10:30'
+    );
+INSERT INTO workout_performance(
+    perf_id,
+    exercise_id,
+    actual_sets,
+    actual_reps,
+    actual_weight,
+    perf_date
+    )VALUES(
+        18,
+        1,
+        5,
+        7,
+        110,
+        '2024-01-16 12:11:37' 
+    );
 -- Table: workout_plans
 CREATE TABLE IF NOT EXISTS workout_plans (
     plan_id    INT  NOT NULL
@@ -1399,3 +1679,23 @@ INSERT INTO workouts (
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
+--important query
+SELECT u.user_id,u.fname,u.lname,wpr.perf_id,e.exercise_name, wpr.actual_sets,wpr.actual_reps,wpr.actual_weight,wpr.perf_date
+    FROM users u
+    JOIN workout_plans wpl ON wpl.user_id = u.user_id
+    JOIN workouts w ON w.plan_id = wpl.plan_id
+    JOIN exercises e ON e.workout_id = w.workout_id
+    JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
+    WHERE wpl.user_id = ?
+;
+
+--list all names of workout user ha performed
+SELECT e.exercise_id, e.exercise_name
+    FROM users u
+    JOIN workout_plans wpl ON wpl.user_id = u.user_id
+    JOIN workouts w ON w.plan_id = wpl.plan_id
+    JOIN exercises e ON e.workout_id = w.workout_id
+    JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
+    WHERE wpl.user_id = ?
+    GROUP BY e.exercise_name
+;

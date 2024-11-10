@@ -344,7 +344,7 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
     // This will likely need to be adjusted to make more meaningful state names
 
 
-    const performanceMetrics = await getPerformanceMetrics(recommendedPlan.plan_id);
+    const performanceMetrics = await getPerformanceMetrics(recommendedPlan.userId);
     // const nextState = String(state) + String(feedback.rating);  // Ensure nextState is always a string
     const nextState = determineNextState(state, feedback, performanceMetrics, userPreferences);
 
@@ -379,7 +379,17 @@ async function getUser(user_id) {
 
 
 
-async function getPerformanceMetrics(planId) {
+async function getPerformanceMetrics(user_id) {
+    const query = `
+    SELECT u.user_id,u.fname,u.lname,wpr.perf_id,e.exercise_name, wpr.actual_sets,wpr.actual_reps,wpr.actual_weight,wpr.perf_date
+    FROM users u
+    JOIN workout_plans wpl ON wpl.user_id = u.user_id
+    JOIN workouts w ON w.plan_id = wpl.plan_id
+    JOIN exercises e ON e.workout_id = w.workout_id
+    JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
+    WHERE wpl.user_id = ?
+;`;
+    /*
     const query = `
         SELECT plan_sets, plan_reps, plan_weight, rest_time
         FROM exercises
@@ -389,8 +399,10 @@ async function getPerformanceMetrics(planId) {
             WHERE plan_id = ?
         );
     `;
-    return await db.all(query, [planId]);
+    */
+    return await db.all(query, [user_id]);
 }
+
 
 
 module.exports = {
@@ -409,5 +421,5 @@ module.exports = {
     getAllMuscles,
     getUser,
 
-    getPerformanceMetrics
+    getPerformanceMetrics,
 };

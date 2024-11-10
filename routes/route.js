@@ -18,6 +18,8 @@ router.get("/allmuscles",controller.getAllMuscles);
 
 router.get("/userprofile/:user_id",controller.getUser);
 
+router.get("/userworkouthistory/:user_id",controller.getPerformanceMetrics);
+
 //module.exports = router;
 
 
