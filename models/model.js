@@ -361,7 +361,7 @@ async function storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned
 }
 
 
-// ADDDED
+// ADDED
 async function getUserWorkoutPlans(userId) {
     if (!userId || isNaN(userId)) {
         throw new Error('Invalid User ID');
@@ -445,6 +445,7 @@ async function upsertQValue(userId, state, action, qValue) {
 
 // ADDED
 async function updateQValue(userId, state, action, reward, nextState) {
+    console.log("updateQValue called");
     const learningRate = 0.1;
     const discountFactor = 0.9;
 
@@ -999,7 +1000,10 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
     console.log(`State: ${state}, Next State: ${nextState}, Feedback Rating: ${feedback.rating}`);
 
     // Update Q-value based on feedback and new state
-    await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
+
+    // REMOVED FOR TESTING, SOLVES AUTO FEEDBACK SUBMISSION ON REFRESH BUG
+    //await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
+
     //await updateQValue(userId, state, recommendedPlan, reward, nextState);
 
 
