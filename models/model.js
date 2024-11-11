@@ -26,6 +26,7 @@ async function getUserPreferences(userId) {
     return await db.get(sql, [userId]);
 }
 
+
 // KEEP THIS, WORKS
 // Fetch active workout plans for the user, including associated workouts and exercises
 //for severe workouts just modify this
@@ -913,10 +914,11 @@ console.log(`Feedback viewing: ${JSON.stringify(feedback)}`);
 
 // Define thresholds for feedback and performance
 const feedbackThreshold = 3; // Threshold for low ratings triggering a state change
-const performanceThreshold = 5; // Threshold for performance improvement triggering state progression
+const performanceThreshold = 5; // Threshold for performance improvement triggering state progression */
 
+// DONT USE
 // Example state mappings based on feedback and performance
-const stateMapping = {
+/* const stateMapping = {
     "StrengthBeginner": "StrengthIntermediate",
     "StrengthIntermediate": "StrengthAdvanced",
     "CardioBeginner": "CardioIntermediate",
@@ -925,16 +927,28 @@ const stateMapping = {
     // ADDED
     "StrengthAdvanced": "StrengthBeginner"
 };
+let nextState = currentState; */
 
-let nextState = currentState;
+// ADDED FOR STATE CHANGE UPDATE IN DB, USE
+/* const stateMapping = {
+    "StrengthBeginner": { fitGoal: "Strength", expLevel: "Intermediate" },
+    "StrengthIntermediate": { fitGoal: "Strength", expLevel: "Advanced" },
+    "CardioBeginner": { fitGoal: "Cardio", expLevel: "Intermediate" },
+    "CardioIntermediate": { fitGoal: "Cardio", expLevel: "Advanced" },
+    "StrengthAdvanced": { fitGoal: "Strength", expLevel: "Beginner" }
+};
+let nextState = { fitGoal: currentState.split(/(?=[A-Z])/)[0], expLevel: currentState.split(/(?=[A-Z])/)[1] };
+
 
 // Evaluate user feedback (positive or negative)
 if (feedback.rating < feedbackThreshold) {
     // If feedback is consistently low, consider transitioning to a different workout focus or difficulty level
     if (currentState.includes("Strength")) {
-        nextState = "CardioBeginner"; // Transition to cardio if strength is poorly rated
+        //nextState = "CardioBeginner"; // Transition to cardio if strength is poorly rated
+        nextState = { fitGoal: "Cardio", expLevel: "Beginner" };
     } else if (currentState.includes("Cardio")) {
-        nextState = "StrengthBeginner"; // Transition to strength if cardio is poorly rated
+        //nextState = "StrengthBeginner"; // Transition to strength if cardio is poorly rated
+        nextState = { fitGoal: "Strength", expLevel: "Beginner" };
     }
 } else if (feedback.rating >= feedbackThreshold && feedback.rating <= 5) {
     // Check performance metrics for improvement
@@ -991,11 +1005,16 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
 
 
     // Use the current state as the next state
+    // USE FOR NO STATE CHANGE
     const nextState = state;
 
     // ADD FOR STATE CHANGE IMPLEMENTATION
     //const performanceMetrics = await getPerformanceMetrics(recommendedPlan.plan_id);
     //const nextState = determineNextState(state, feedback, performanceMetrics, userPreferences);
+    // ADDED FOR DB NEXT STATE UPDATE TEST
+    //const { fitGoal, expLevel } = nextState;
+    //await updateUserState(userId, fitGoal, expLevel);
+
 
     console.log(`State: ${state}, Next State: ${nextState}, Feedback Rating: ${feedback.rating}`);
 

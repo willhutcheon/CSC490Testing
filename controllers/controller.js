@@ -264,6 +264,7 @@ async function submitPlanFeedback(req, res) {
         const totalWeightLifted = performanceMetrics.reduce((sum, metric) => sum + (metric.plan_reps * metric.plan_weight), 0);
 
         // Pass aggregated metrics to determineNextState
+        // NEED TO USE MODEL VERSION OF THIS FUNCTION
         const nextState = determineNextState(state.fit_goal + state.exp_level, rating, { reps: totalReps, weightLifted: totalWeightLifted }, state.userPreferences);
 
 
@@ -292,6 +293,7 @@ async function submitPlanFeedback(req, res) {
         res.status(500).send({ error: 'Error submitting feedback.' });
     }
 }
+// THIS IS ALREADY IN MODEL, USE MODEL VERSION IN submitPlanFeedback
 function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
     
 
