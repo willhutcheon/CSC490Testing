@@ -18,7 +18,7 @@ router.get("/allmuscles",controller.getAllMuscles);
 
 router.get("/userprofile/:user_id",controller.getUser);
 
-router.get("/userworkouthistory/:user_id",controller.getPerformanceMetrics);
+router.get("/userworkouthistory/:user_id",controller.getUserHistory);
 
 //module.exports = router;
 

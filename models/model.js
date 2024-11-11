@@ -381,16 +381,6 @@ async function getUser(user_id) {
 
 async function getPerformanceMetrics(user_id) {
     const query = `
-    SELECT u.user_id,u.fname,u.lname,wpr.perf_id,e.exercise_name, wpr.actual_sets,wpr.actual_reps,wpr.actual_weight,wpr.perf_date
-    FROM users u
-    JOIN workout_plans wpl ON wpl.user_id = u.user_id
-    JOIN workouts w ON w.plan_id = wpl.plan_id
-    JOIN exercises e ON e.workout_id = w.workout_id
-    JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
-    WHERE wpl.user_id = ?
-;`;
-    /*
-    const query = `
         SELECT plan_sets, plan_reps, plan_weight, rest_time
         FROM exercises
         WHERE workout_id IN (
@@ -399,7 +389,19 @@ async function getPerformanceMetrics(user_id) {
             WHERE plan_id = ?
         );
     `;
-    */
+    return await db.all(query, [user_id]);
+}
+
+async function getUserHistory(user_id){
+    const query = `
+    SELECT u.user_id,u.fname,u.lname,wpr.perf_id,e.exercise_name, wpr.actual_sets,wpr.actual_reps,wpr.actual_weight,wpr.perf_date
+    FROM users u
+    JOIN workout_plans wpl ON wpl.user_id = u.user_id
+    JOIN workouts w ON w.plan_id = wpl.plan_id
+    JOIN exercises e ON e.workout_id = w.workout_id
+    JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
+    WHERE wpl.user_id = ?
+    ;`;
     return await db.all(query, [user_id]);
 }
 
@@ -420,6 +422,6 @@ module.exports = {
     upsertQValue,
     getAllMuscles,
     getUser,
-
+    getUserHistory,
     getPerformanceMetrics,
 };

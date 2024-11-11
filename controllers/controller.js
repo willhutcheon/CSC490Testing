@@ -32,9 +32,13 @@ async function getAllMuscles(req,res,next){
 }
 
 async function getPerformanceMetrics(req,res,next){
+
+}
+
+async function getUserHistory(req,res,next){
     const user_id =req.params.user_id.replace (/[^\d.]/g, '' );
     try {
-        let performance = await model.getPerformanceMetrics(user_id);
+        let performance = await model.getUserHistory(user_id);
         res.json({performance:performance});
     }catch (error){
         next(error);
@@ -345,6 +349,7 @@ module.exports = {
     getAllMuscles,
     getUser,
     getPerformanceMetrics,
+    getUserHistory,
 };
 
 
