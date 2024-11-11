@@ -54,6 +54,7 @@ router.get("/userworkouthistory/:user_id",controller.getUserHistory);
 // TODO: feedback does not to be resubmitted per refresh
 // TODO: state changes (update user fit_goal and experience level directly in db when state changes)
 // TODO: injury and muscle filtering
+// TODO: change to hosted db
 
 
 
