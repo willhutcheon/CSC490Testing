@@ -389,7 +389,7 @@ async function getPerformanceMetrics(plan_id) {
             WHERE plan_id = ?
         );
     `;
-    return await db.all(query, [user_id]);
+    return await db.all(query, [plan_id]);
 }
 
 async function getUserHistory(user_id){
