@@ -379,7 +379,7 @@ async function getUser(user_id) {
 
 
 
-async function getPerformanceMetrics(user_id) {
+async function getPerformanceMetrics(plan_id) {
     const query = `
         SELECT plan_sets, plan_reps, plan_weight, rest_time
         FROM exercises
