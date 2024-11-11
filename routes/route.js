@@ -48,8 +48,10 @@ router.post('/workoutperformance/:user_id', crudController.getWorkoutPerformance
 
 
 
-
+// Main TODOs
 // TODO: feedback does not to be resubmitted per refresh
+// TODO: state changes (update user fit_goal and experience level directly in db when state changes)
+// TODO: injury and muscle filtering
 
 
 

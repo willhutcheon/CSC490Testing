@@ -51,17 +51,17 @@ async function getRecommendedPlans(req, res, next) {
         }
 
         const recommendedPlan = await model.recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId);
-        res.render("recommendations", {
+        /* res.render("recommendations", {
             title: 'Recommended Workout Plans',
             plans: [recommendedPlan],
             user: { user_id: userId }
-        });
+        }); */
         
         // KEEP AND USE
-        /* res.json({
+        res.json({
             status: "success",
             recommendedPlans: [recommendedPlan]
-        }); */
+        });
 
         //New JSON code from here
         // const workout = await model.workoutExercises();
@@ -363,6 +363,18 @@ console.log(`Test Next State: ${nextState}`); */
 
 
 
+// COLLIN ADDED
+async function getPerformanceMetricsFront(req,res,next){
+    const user_id =req.params.user_id.replace (/[^\d.]/g, '' );
+    try {
+        let performance = await model.getPerformanceMetrics(user_id);
+        res.json({performance:performance});
+    }catch (error){
+        next(error);
+    }
+}
+
+
 module.exports = {
     getAllUsers,
     getRecommendedPlans,
@@ -370,7 +382,10 @@ module.exports = {
     determineNextState,
     getAllMuscles,
     getUser,
-    getLogin
+    getLogin,
+
+    // COLLIN ADDED
+    getPerformanceMetricsFront
 };
 // Different plan, same state: Chosen when feedback is positive or performance doesn’t warrant a state change.
 // New state: Triggered by low feedback or high performance, suggesting either a new workout type (e.g., cardio) or a new level (e.g., intermediate).

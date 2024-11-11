@@ -314,14 +314,18 @@ async function getWorkoutPlans(userId) {
 
 
 // Fetch user feedback for a workout plan
-async function getUserPlanFeedback(userId, planId) {
+/* async function getUserPlanFeedback(userId, planId) {
     const sql = `
         SELECT rating, total_calories_burned 
         FROM user_plan_feedback 
         WHERE user_id = ? AND plan_id = ?;
     `;
+
+    const feedback = await db.get(sql, [userId, planId]);
+    console.log("Feedback in getUserPlanFeedback1:", feedback);
+
     return await db.get(sql, [userId, planId]);
-}
+} */
 
 
 
