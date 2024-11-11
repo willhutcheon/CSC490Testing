@@ -30,10 +30,10 @@ router.get("/login",controller.getLogin);
 }); */
 
 router.post('/users/create', crudController.createUser);
-router.get('/users/update/:user_id', crudController.getUser);
+router.get('/users/:user_id', crudController.getUser);
 router.post('/users/update/:user_id', crudController.updateUser);
 // router.post('/users/update', crudController.updateUser);
-router.get('/preferences/update/:user_id', crudController.getPreferences);
+router.get('/preferences/:user_id', crudController.getPreferences);
 // router.post('/preferences/update', crudController.updatePreferences);
 router.post('/preferences/update/:user_id', crudController.updatePreferences);
 /* router.get('/preferences/create', (req, res) => {
@@ -47,7 +47,7 @@ router.post('/workoutperformance/update', crudController.updateWorkoutPerformanc
 
 
 
-
+// TODO: feedback does not to be resubmitted per refresh
 
 
 

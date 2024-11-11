@@ -51,17 +51,17 @@ async function getRecommendedPlans(req, res, next) {
         }
 
         const recommendedPlan = await model.recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId);
-        /* res.render("recommendations", {
+        res.render("recommendations", {
             title: 'Recommended Workout Plans',
             plans: [recommendedPlan],
             user: { user_id: userId }
-        }); */
+        });
         
         // KEEP AND USE
-        res.json({
+        /* res.json({
             status: "success",
             recommendedPlans: [recommendedPlan]
-        });
+        }); */
 
         //New JSON code from here
         // const workout = await model.workoutExercises();

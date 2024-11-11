@@ -888,6 +888,7 @@ async function chooseAction(userId, state) {
 function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
     return currentState;
 }
+// ADD FOR STATE CHANGE IMPLEMENTATION
 //function determineNextState(currentState, feedback, performanceMetrics, userPreferences) {
 
 
@@ -986,6 +987,10 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
 
     // Use the current state as the next state
     const nextState = state;
+
+    // ADD FOR STATE CHANGE IMPLEMENTATION
+    //const performanceMetrics = await getPerformanceMetrics(recommendedPlan.plan_id);
+    //const nextState = determineNextState(state, feedback, performanceMetrics, userPreferences);
 
     console.log(`State: ${state}, Next State: ${nextState}, Feedback Rating: ${feedback.rating}`);
 
