@@ -45,6 +45,8 @@ router.post('/workoutperformance/create', crudController.createWorkoutPerformanc
 router.post('/workoutperformance/update', crudController.updateWorkoutPerformance);
 router.post('/workoutperformance/:user_id', crudController.getWorkoutPerformance);
 
+// COLLIN ADDED
+router.get("/userworkouthistory/:user_id",controller.getUserHistory);
 
 
 

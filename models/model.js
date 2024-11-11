@@ -1139,6 +1139,20 @@ async function getWorkoutPerformance(userId) {
     return await db.get(sql, [userId]);
 }
 
+// COLLIN ADDED
+async function getUserHistory(user_id){
+    const query = `
+    SELECT u.user_id,u.fname,u.lname,wpr.perf_id,e.exercise_name, wpr.actual_sets,wpr.actual_reps,wpr.actual_weight,wpr.perf_date
+    FROM users u
+    JOIN workout_plans wpl ON wpl.user_id = u.user_id
+    JOIN workouts w ON w.plan_id = wpl.plan_id
+    JOIN exercises e ON e.workout_id = w.workout_id
+    JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
+    WHERE wpl.user_id = ?
+    ;`;
+    return await db.all(query, [user_id]);
+}
+
 
 module.exports = {
     getAllUsers,
@@ -1163,5 +1177,8 @@ module.exports = {
     // ADDED
     updateUserState,
 
-    getWorkoutPlanDetails
+    getWorkoutPlanDetails,
+
+    // COLLIN ADDED
+    getUserHistory
 };

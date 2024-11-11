@@ -364,12 +364,12 @@ console.log(`Test Next State: ${nextState}`); */
 
 
 // COLLIN ADDED
-async function getPerformanceMetricsFront(req,res,next){
-    const user_id =req.params.user_id.replace (/[^\d.]/g, '' );
+async function getUserHistory(req, res, next) {
+    const user_id = req.params.user_id.replace(/[^\d.]/g, '');
     try {
-        let performance = await model.getPerformanceMetrics(user_id);
+        let performance = await model.getUserHistory(user_id);
         res.json({performance:performance});
-    }catch (error){
+    } catch (error) {
         next(error);
     }
 }
@@ -385,7 +385,7 @@ module.exports = {
     getLogin,
 
     // COLLIN ADDED
-    getPerformanceMetricsFront
+    getUserHistory
 };
 // Different plan, same state: Chosen when feedback is positive or performance doesn’t warrant a state change.
 // New state: Triggered by low feedback or high performance, suggesting either a new workout type (e.g., cardio) or a new level (e.g., intermediate).
