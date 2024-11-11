@@ -229,6 +229,7 @@ async function getUser(req, res, next) {
 }
 
 async function submitPlanFeedback(req, res) {
+    console.log("submitPlanFeedback called");
     console.log("Form submission data:", req.body);
     try {
         const { userId, planId, rating, totalCaloriesBurned } = req.body;
