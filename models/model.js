@@ -1021,7 +1021,7 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
     // Update Q-value based on feedback and new state
 
     // REMOVED FOR TESTING, SOLVES AUTO FEEDBACK SUBMISSION ON REFRESH BUG
-    //await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
+    await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
 
     //await updateQValue(userId, state, recommendedPlan, reward, nextState);
 
