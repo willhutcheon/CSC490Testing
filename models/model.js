@@ -101,6 +101,7 @@ async function getLogin(username) {
 
 
 async function getWorkoutPlanDetails(planId) {
+    console.log("getWorkoutPlanDetails called");
     const sql = `
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
            w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
@@ -252,7 +253,8 @@ async function getWorkoutPlanDetails(planId) {
 
 
 async function getWorkoutPlans(userId) {
-    const sql = `
+    // USE, WILLS ORIGINAL
+    /* const sql = `
     SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
            w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
            e.plan_reps, e.plan_weight, e.rest_time, 
@@ -261,11 +263,27 @@ async function getWorkoutPlans(userId) {
         JOIN workouts w ON wp.plan_id = w.plan_id
         JOIN exercises e ON w.workout_id = e.workout_id
     WHERE wp.user_id = ? AND wp.active = true;
+    `; */
+
+    console.log("getWorkoutPlans called");
+    // COLLINS MUSCLE FILTERING
+    const sql = `SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*
+    FROM users u
+    JOIN workout_plans wp ON wp.user_id = u.user_id
+    JOIN workouts w ON wp.plan_id = w.plan_id
+    JOIN exercises e ON w.workout_id = e.workout_id
+    JOIN muscle_workout mw ON w.workout_id = mw.workout_id 
+    JOIN muscle m ON m.muscle_id = mw.muscle_id
+    LEFT JOIN user_injury ui ON ui.muscle_id = m.muscle_id AND ui.user_id = u.user_id
+    WHERE wp.user_id = ? 
+    AND wp.active = true 
+    AND (ui.injury_intensity IS NULL OR ui.injury_intensity <> 'severe')
+    GROUP BY w.workout_id;
     `;
 
     const rows = await db.all(sql, [userId]);
 
-    console.log('Raw SQL Result Rows:', rows);
+    //console.log('Raw SQL Result Rows:', rows);
 
     const plans = {};
 
@@ -1021,7 +1039,7 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
     // Update Q-value based on feedback and new state
 
     // REMOVED FOR TESTING, SOLVES AUTO FEEDBACK SUBMISSION ON REFRESH BUG
-    await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
+    //await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
 
     //await updateQValue(userId, state, recommendedPlan, reward, nextState);
 

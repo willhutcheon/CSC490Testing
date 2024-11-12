@@ -236,11 +236,13 @@ async function submitPlanFeedback(req, res) {
         console.log(`Received feedback - User ID: ${userId}, Plan ID: ${planId}, Rating: ${rating}, Calories Burned: ${totalCaloriesBurned}`);
 
         // Insert or update user plan feedback in the database
-        await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
+        //await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
 
         if (!userId || !planId || !rating) {
             return res.status(400).send('Missing required parameters: userId, planId, or feedback');
         }
+
+        await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
 
         // Fetch user's current state from the database (preferences or history)
         const state = await model.getUserPreferences(userId);
@@ -278,6 +280,8 @@ async function submitPlanFeedback(req, res) {
 
         // Update Q-value based on feedback and reward
         await model.updateQValue(userId, state.fit_goal + state.exp_level, Number(planId), reward, nextState);
+        // TEST
+        //await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
 
         // Respond with success
         res.status(200).send({ 
