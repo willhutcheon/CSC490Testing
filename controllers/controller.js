@@ -276,7 +276,12 @@ async function submitPlanFeedback(req, res) {
         }
 
         // Calculate reward
-        const reward = model.calculateReward({ rating, totalCaloriesBurned });
+        // REWARD IS ALWAYS 0
+        //const reward = model.calculateReward({ rating, totalCaloriesBurned });
+
+        const feedback = await model.getUserPlanFeedback(userId, planId);
+        const reward = model.calculateReward(feedback);
+        console.log(`Reward in submitPlanFeedback: ${reward}`);
 
         // Update Q-value based on feedback and reward
         await model.updateQValue(userId, state.fit_goal + state.exp_level, Number(planId), reward, nextState);
