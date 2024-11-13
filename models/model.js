@@ -1190,6 +1190,7 @@ async function getUserHistory(user_id){
     JOIN exercises e ON e.workout_id = w.workout_id
     JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
     WHERE wpl.user_id = ?
+    ORDER BY wpr.perf_date
     ;`;
     return await db.all(query, [user_id]);
 }

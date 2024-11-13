@@ -2163,3 +2163,36 @@ INSERT INTO user_injury(
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
+
+INSERT INTO workout_performance (
+                                    perf_id,
+                                    exercise_id,
+                                    actual_sets,
+                                    actual_reps,
+                                    actual_weight,
+                                    perf_date
+                                )
+                                VALUES (
+                                    37,
+                                    2,
+                                    3,
+                                    5,
+                                    135,
+                                    '2024-01-26 12:12:30'
+                                );
+INSERT INTO workout_performance (
+                                    perf_id,
+                                    exercise_id,
+                                    actual_sets,
+                                    actual_reps,
+                                    actual_weight,
+                                    perf_date
+                                )
+                                VALUES (
+                                    38,
+                                    2,
+                                    3,
+                                    5,
+                                    135,
+                                    '2024-01-26 12:14:30'
+                                );                               
