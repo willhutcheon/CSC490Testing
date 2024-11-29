@@ -653,11 +653,10 @@ function calculateReward(feedback) {
     }
 } */
 // DECAYING EPSILON (MIGHT USE?)
-let epsilon = 1.0; // Initial exploration rate
-const epsilonMin = 0.01; // Minimum exploration rate
-const epsilonDecay = 0.995; // Decay factor for exponential decay
-    
-async function chooseAction(userId, state, iteration) {
+//let epsilon = 1.0; // Initial exploration rate
+//const epsilonMin = 0.01; // Minimum exploration rate
+//const epsilonDecay = 0.995; // Decay factor for exponential decay
+/* async function chooseAction(userId, state, iteration) {
     if (typeof userId !== 'number' || typeof state !== 'string') {
         console.error("Invalid parameter types:", { userId, state });
         return null;
@@ -716,8 +715,142 @@ async function chooseAction(userId, state, iteration) {
         console.error("Error in chooseAction:", error);
         return null;
     }
+} */
+async function getEpsilon(userId) {
+    const sql = `
+        SELECT epsilon 
+        FROM user_rl_state 
+        WHERE user_id = ?;
+    `;
+    const result = await db.get(sql, [userId]);
+    return result ? result.epsilon : null;
 }
+async function updateEpsilon(userId, newEpsilon) {
+    const sql = `
+        INSERT INTO user_rl_state (user_id, epsilon)
+        VALUES (?, ?)
+        ON CONFLICT(user_id) DO UPDATE SET epsilon = excluded.epsilon;
+    `;
+    await db.run(sql, [userId, newEpsilon]);
+}
+/* async function chooseAction(userId, state) {
+    const epsilonMin = 0.01; // Minimum exploration rate
+    const epsilonDecay = 0.995; // Decay factor
+
+    try {
+        // Step 1: Retrieve or initialize epsilon from the database
+        let epsilon = await getEpsilon(userId); // Fetch epsilon from the database
+        if (epsilon === null) {
+            epsilon = 1.0; // Default initial value if not found in the database
+            await updateEpsilon(userId, epsilon); // Save the initial epsilon value to the database
+        }
+
+        // Step 2: Fetch all actions and Q-values for the given state
+        const sql = `
+            SELECT action, q_value
+            FROM q_values
+            WHERE user_id = ? AND state = ?;
+        `;
+        const actions = await db.all(sql, [userId, state]);
+
+        if (!actions || actions.length === 0) {
+            console.log("No actions found for this user and state.");
+            return null;
+        }
+
+        let selectedAction;
+
+        // Step 3: Exploration vs. Exploitation
+        if (Math.random() < epsilon) {
+            // Explore: Choose a random action
+            const randomIndex = Math.floor(Math.random() * actions.length);
+            selectedAction = actions[randomIndex];
+            console.log("Exploring: Chose random action:", selectedAction.action);
+        } else {
+            // Exploit: Choose the action with the highest Q-value
+            selectedAction = actions.reduce((best, action) =>
+                action.q_value > best.q_value ? action : best
+            );
+            console.log("Exploiting: Chose best action:", selectedAction.action);
+        }
+
+        // Step 4: Fetch the workout plan for the selected action (plan_id)
+        const planSql = `
+            SELECT * 
+            FROM workout_plans 
+            WHERE plan_id = ?;
+        `;
+        const plan = await db.get(planSql, [selectedAction.action]);
+
+        if (!plan) {
+            console.log("No plan found for plan_id:", selectedAction.action);
+            return null;
+        }
+
+        // Step 5: Update epsilon using exponential decay
+        const newEpsilon = Math.max(epsilonMin, epsilon * epsilonDecay);
+        await updateEpsilon(userId, newEpsilon); // Save updated epsilon to the database
+
+        console.log(`Updated epsilon for user ${userId}: ${newEpsilon}`);
+        console.log("Fetched full workout plan:", plan);
+
+        // Return the selected workout plan
+        return plan;
+    } catch (error) {
+        console.error("Error in chooseAction:", error);
+        return null;
+    }
+} */
+async function chooseAction(userId, state) {
+    const epsilon = await getEpsilon(userId);
+    if (epsilon === null) {
+        console.error("Epsilon not initialized for user:", userId);
+        return null;
+    }
     
+    const sql = `
+        SELECT action, q_value
+        FROM q_values
+        WHERE user_id = ? AND state = ?;
+    `;
+    const actions = await db.all(sql, [userId, state]);
+    
+    if (!actions || actions.length === 0) {
+        console.log("No actions found for this user and state.");
+        return null;
+    }
+    
+    let selectedAction;
+    
+    if (Math.random() < epsilon) {
+        // Explore
+        const randomIndex = Math.floor(Math.random() * actions.length);
+        selectedAction = actions[randomIndex];
+        console.log("Exploring: Chose random action:", selectedAction.action);
+    } else {
+        // Exploit
+        selectedAction = actions.reduce((best, action) =>
+            action.q_value > best.q_value ? action : best
+        );
+        console.log("Exploiting: Chose best action:", selectedAction.action);
+    }
+    
+    // Fetch and return the selected plan
+    const planSql = `
+        SELECT * 
+        FROM workout_plans 
+        WHERE plan_id = ?;
+    `;
+    const plan = await db.get(planSql, [selectedAction.action]);
+    
+    if (!plan) {
+        console.log("No plan found for plan_id:", selectedAction.action);
+        return null;
+    }
+    
+    console.log("Fetched full workout plan:", plan);
+    return plan;
+}
     
 
 
@@ -1354,5 +1487,8 @@ module.exports = {
     getWorkoutPlanDetails,
 
     // COLLIN ADDED
-    getUserHistory
+    getUserHistory,
+
+    updateEpsilon,
+    getEpsilon
 };

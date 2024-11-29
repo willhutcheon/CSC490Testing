@@ -32,7 +32,6 @@ router.get("/userworkouthistory/:user_id",controller.getUserHistory);
 // Main TODOs
 // TODO: state changes (update user fit_goal and experience level directly in db when state changes), all of this is done in the model
 // TODO: injury and muscle filtering (muscle filtering done in getWorkoutPlans?)
-// TODO: implement epsilon greedy policy(done?), add decaying epsilon(done?), needs epsilon value needs to be stored in db for each user
 
 // use updateUserState in controller to update state after state change?
 // keep determineNextState in submitPlanFeedback, remove it from recommendWorkoutPlansWithRL

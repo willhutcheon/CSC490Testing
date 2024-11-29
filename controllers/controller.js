@@ -288,6 +288,17 @@ async function submitPlanFeedback(req, res) {
         // TEST
         //await updateQValue(userId, state, recommendedPlan.plan_id, reward, nextState);
 
+        const epsilonMin = 0.01;
+        const epsilonDecay = 0.995;
+        let epsilon = await model.getEpsilon(userId); // Fetch current epsilon
+        if (epsilon === null) {
+            epsilon = 1.0; // Default initial value
+            await model.updateEpsilon(userId, epsilon); // Initialize epsilon in the database
+        }
+        const newEpsilon = Math.max(epsilonMin, epsilon * epsilonDecay);
+        await model.updateEpsilon(userId, newEpsilon); // Update epsilon in the database
+        console.log(`Updated epsilon for user ${userId}: ${newEpsilon}`);
+
         // Respond with success
         res.status(200).send({ 
             message: 'Feedback submitted successfully!'
