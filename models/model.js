@@ -463,6 +463,7 @@ async function upsertQValue(userId, state, action, qValue) {
 
 
 // ADDED
+// BELLMAN EQUATION
 async function updateQValue(userId, state, action, reward, nextState) {
     console.log("updateQValue called");
     const learningRate = 0.1;
@@ -540,8 +541,8 @@ function calculateReward(feedback) {
 
 
 
-
-async function chooseAction(userId, state) {
+// FINAL (OG)
+/* async function chooseAction(userId, state) {
     if (typeof userId !== 'number' || typeof state !== 'string') {
         console.error("Invalid parameter types:", { userId, state });
         return null;
@@ -559,7 +560,7 @@ async function chooseAction(userId, state) {
         if (!actions || actions.length === 0) {
             console.log("No actions found for this user and state.");
             return null;
-        }
+        }        
 
         // Find the action with the highest Q-value
         let bestAction = actions[0];
@@ -591,7 +592,138 @@ async function chooseAction(userId, state) {
         console.error("Error in chooseAction:", error);
         return null;
     }
+} */
+// EXPLORATION EXPLOITATION (WORKS)
+/* async function chooseAction(userId, state) {
+    if (typeof userId !== 'number' || typeof state !== 'string') {
+        console.error("Invalid parameter types:", { userId, state });
+        return null;
+    }
+    
+    const sql = `
+        SELECT action, q_value
+        FROM q_values
+        WHERE user_id = ? AND state = ?;
+    `;
+    
+    try {
+        const actions = await db.all(sql, [userId, state]); // Retrieve all actions for the state
+    
+        if (!actions || actions.length === 0) {
+            console.log("No actions found for this user and state.");
+            return null;
+        }
+    
+        const epsilon = 0.1; // Exploration rate (10% chance to explore)
+    
+        let selectedAction;
+    
+        if (Math.random() < epsilon) {
+            // Explore: Choose a random action
+            const randomIndex = Math.floor(Math.random() * actions.length);
+            selectedAction = actions[randomIndex];
+            console.log("Exploring: Chose random action:", selectedAction.action);
+        } else {
+            // Exploit: Choose the action with the highest Q-value
+            selectedAction = actions.reduce((best, action) =>
+                action.q_value > best.q_value ? action : best
+            );
+            console.log("Exploiting: Chose best action:", selectedAction.action);
+        }
+    
+        // Fetch the full workout plan details using the selected action (plan_id)
+        const planSql = `
+            SELECT * 
+            FROM workout_plans 
+            WHERE plan_id = ?;
+        `;
+    
+        const plan = await db.get(planSql, [selectedAction.action]); // Fetch the full plan based on plan_id
+    
+        if (!plan) {
+            console.log("No plan found for plan_id:", selectedAction.action);
+            return null;
+        }
+    
+        console.log("Fetched full workout plan:", plan);
+        return plan; // Return the full workout plan object
+    } catch (error) {
+        console.error("Error in chooseAction:", error);
+        return null;
+    }
+} */
+// DECAYING EPSILON (MIGHT USE?)
+let epsilon = 1.0; // Initial exploration rate
+const epsilonMin = 0.01; // Minimum exploration rate
+const epsilonDecay = 0.995; // Decay factor for exponential decay
+    
+async function chooseAction(userId, state, iteration) {
+    if (typeof userId !== 'number' || typeof state !== 'string') {
+        console.error("Invalid parameter types:", { userId, state });
+        return null;
+    }
+    
+    const sql = `
+        SELECT action, q_value
+        FROM q_values
+        WHERE user_id = ? AND state = ?;
+    `;
+    
+    try {
+        const actions = await db.all(sql, [userId, state]); // Retrieve all actions for the state
+    
+        if (!actions || actions.length === 0) {
+            console.log("No actions found for this user and state.");
+            return null;
+        }
+    
+        // Decay epsilon after each iteration or episode
+        epsilon = Math.max(epsilonMin, epsilon * epsilonDecay); // Exponential decay
+        console.log(`Current epsilon (exploration rate): ${epsilon}`);
+    
+        let selectedAction;
+    
+        if (Math.random() < epsilon) {
+            // Explore: Choose a random action
+            const randomIndex = Math.floor(Math.random() * actions.length);
+            selectedAction = actions[randomIndex];
+            console.log("Exploring: Chose random action:", selectedAction.action);
+        } else {
+            // Exploit: Choose the action with the highest Q-value
+            selectedAction = actions.reduce((best, action) =>
+                action.q_value > best.q_value ? action : best
+            );
+            console.log("Exploiting: Chose best action:", selectedAction.action);
+        }
+    
+        // Fetch the full workout plan details using the selected action (plan_id)
+        const planSql = `
+            SELECT * 
+            FROM workout_plans 
+            WHERE plan_id = ?;
+        `;
+    
+        const plan = await db.get(planSql, [selectedAction.action]); // Fetch the full plan based on plan_id
+    
+        if (!plan) {
+            console.log("No plan found for plan_id:", selectedAction.action);
+            return null;
+        }
+    
+        console.log("Fetched full workout plan:", plan);
+        return plan; // Return the full workout plan object
+    } catch (error) {
+        console.error("Error in chooseAction:", error);
+        return null;
+    }
 }
+    
+    
+
+
+
+
+
 // KEEP
 /* async function chooseAction(userId, state) {
     if (typeof userId !== 'number' || typeof state !== 'string') {
