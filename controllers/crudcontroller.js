@@ -31,6 +31,7 @@ async function createUser(req, res, next) {
         res.status(400).send({ error: "Missing required fields" });
     }
 }
+
 async function createPreferences(req, res, next) {
     let { preference_id, user_id, preferred_types, preferred_intensity, preferred_duration, preferred_exercise } = req.body;
     user_id = parseInt(user_id, 10);
@@ -52,6 +53,7 @@ async function createPreferences(req, res, next) {
         res.status(400).send({ error: "Missing required fields" });
     }
 }
+
 async function updateUser(req, res, next) {
     let { user_id, fname, lname, username, password, email, fit_goal, exp_level } = req.body;
     user_id = parseInt(user_id, 10);
@@ -73,6 +75,7 @@ async function updateUser(req, res, next) {
         res.status(400).send({ error: "Missing required fields" });
     }
 }
+
 async function updatePreferences(req, res, next) {
     let { user_id, preferred_types, preferred_intensity, preferred_duration, preferred_exercise } = req.body;
     user_id = parseInt(user_id, 10);
@@ -94,12 +97,12 @@ async function updatePreferences(req, res, next) {
         res.status(400).send({ error: "Missing required fields" });
     }
 }
+
 async function getUser(req, res, next) {
     const user_id = req.params.user_id;
     try {
         const user = await model.getUser(user_id);
         if (user) {
-            // res.render('update-user', { user, user_id: user.user_id, error: null, message: null });
             res.status(200).json({ user });
         } else {
             res.status(404).send({ error: "User not found"});
@@ -110,13 +113,13 @@ async function getUser(req, res, next) {
         next(err);
     }
 }
+
 async function getPreferences(req, res, next) {
     const user_id = req.params.user_id;
     try {
         const user = await model.getUser(user_id);
         const preferences = await model.getPreferences(user_id);
         if (user && preferences) {
-            // res.render('update-preferences', {user, preferences, error: null, message: null });
             res.status(200).json({ user, preferences });
         } else {
             res.status(404).send({ error: "User or preferences not found" });
@@ -127,6 +130,7 @@ async function getPreferences(req, res, next) {
         next(err);
     }
 }
+
 async function createInjury(req, res, next) {
     let { muscle_id, user_id, injury_intensity} = req.body;
     user_id = parseInt(user_id, 10);
@@ -198,6 +202,7 @@ async function updateWorkoutPerformance(req, res, next) {
         res.status(400).send({ error: "Missing required fields" });
     }
 }
+
 async function getWorkoutPerformance(req, res) {
     const user_id = req.params.user_id;
     try {
@@ -213,6 +218,7 @@ async function getWorkoutPerformance(req, res) {
         
     }
 }
+
 module.exports = {
     createUser,
     updateUser,

@@ -24,7 +24,6 @@ router.post('/injury/create', crudController.createInjury);
 router.post('/workoutperformance/create', crudController.createWorkoutPerformance);
 router.post('/workoutperformance/update', crudController.updateWorkoutPerformance);
 router.post('/workoutperformance/:user_id', crudController.getWorkoutPerformance);
-// COLLIN ADDED
 router.get("/userworkouthistory/:user_id",controller.getUserHistory);
 
 
@@ -32,6 +31,7 @@ router.get("/userworkouthistory/:user_id",controller.getUserHistory);
 // Main TODOs
 // TODO: state changes (update user fit_goal and experience level directly in db when state changes), all of this is done in the model
 // TODO: injury and muscle filtering (muscle filtering done in getWorkoutPlans?)
+// change epsilon to 0 in user_rl_state
 
 // use updateUserState in controller to update state after state change?
 // keep determineNextState in submitPlanFeedback, remove it from recommendWorkoutPlansWithRL
