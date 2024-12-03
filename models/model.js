@@ -533,9 +533,9 @@ async function updateQValue(userId, state, action, reward, nextState) {
         // need to transfer this from the QTable to db q-table
         // this (below) is always 0 because QTable is no longer init
         // Get the maximum future Q-value for the next state (max Q(s', a'))
-        const maxFutureQ = Math.max(0, ...Object.values(QTable[nextState] || {}));
+        //const maxFutureQ = Math.max(0, ...Object.values(QTable[nextState] || {}));
         // use this, correct way to do it
-        //const maxFutureQ = await calculateMaxFutureQ(userId, nextState);
+        const maxFutureQ = await calculateMaxFutureQ(userId, nextState);
         console.log(`Max future Q: ${maxFutureQ}`);
         // Ensure reward is a valid number
         const validReward = typeof reward === 'number' && !isNaN(reward) ? reward : 0;

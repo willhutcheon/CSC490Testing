@@ -36,18 +36,10 @@ router.get("/userworkouthistory/:user_id",controller.getUserHistory);
 // use updateUserState in controller to update state after state change?
 // keep determineNextState in submitPlanFeedback, remove it from recommendWorkoutPlansWithRL
 
-
-
-
-
 module.exports = router;
 
-// TODO: add decaying epsilon so that the model explores less as it learns more from user feedback
-// TODO: individual q-values for users (done)
-// TODO: formatting of 'state' in q_tables
 // TODO: consider muscle groups
 // TODO: no more cals, need to store and consider injuries
-// TODO: exercises api?
 // TODO: logging and considering plan history
 // TODO: allow users to crud accounts, progress tracking, injuries / injury status and accomidations, goals and goal tracking
 // TODO: allow users to crud workouts, exercises, and preferences
