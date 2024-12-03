@@ -1,6 +1,15 @@
 "use strict";
 const db = require("../models/db-conn");
 
+/**
+ * Inserts a new user record into the `users` table in the database.
+ * The function uses the provided parameters to populate the respective fields in the table.
+ * 
+ * @param {Array} params - An array containing the values to be inserted into the `users` table.
+ *                         The expected order is:
+ *                         [user_id, fname, lname, username, password, email, fit_goal, exp_level, created_at]
+ * @returns {Promise} - A promise that resolves when the SQL query is executed.
+ */
 async function createUser(params) {
     let sql = `
         INSERT INTO users (user_id, fname, lname, username, password, email, fit_goal, exp_level, created_at)
