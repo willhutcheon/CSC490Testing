@@ -909,7 +909,7 @@ async function updateUserState(userId, fitGoal, expLevel) {
  */
 async function getWorkoutPerformance(userId) {
     // SQL query to retrieve exercise performance data (planned vs actual) for a given user.
-    const sql = `
+    /* const sql = `
         SELECT e.exercise_name, e.plan_reps, wp.actual_reps, e.plan_sets,wp.actual_sets,e.plan_weight,wp.actual_weight
     FROM workout_performance wp
         JOIN exercises e ON wp.exercise_id = e.exercise_id
@@ -917,7 +917,14 @@ async function getWorkoutPerformance(userId) {
         JOIN workout_plans ww ON ww.plan_id = w.plan_id
         JOIN users u ON u.user_id = ww.user_id
     WHERE u.user_id = ?;
-    `;
+    `; */
+
+    const sql = `
+        SELECT e.exercise_name, e.plan_reps, wp.actual_reps, e.plan_sets, wp.actual_sets, e.plan_weight, wp.actual_weight
+        FROM workout_performance wp
+        JOIN exercises e ON wp.exercise_id = e.exercise_id
+        WHERE wp.user_id = ?;`;
+
     // Execute the SQL query and retrieve the data from the database. The userId is passed as a parameter to filter the data.
     return await db.get(sql, [userId]);
 }
@@ -930,7 +937,7 @@ async function getWorkoutPerformance(userId) {
  */
 async function getUserHistory(user_id){
     // SQL query to retrieve the user's workout history, including exercise performance data
-    const query = `
+    /* const query = `
     SELECT u.user_id,u.fname,u.lname,wpr.perf_id,e.exercise_name, wpr.actual_sets,wpr.actual_reps,wpr.actual_weight,wpr.perf_date
     FROM users u
     JOIN workout_plans wpl ON wpl.user_id = u.user_id
@@ -939,7 +946,18 @@ async function getUserHistory(user_id){
     JOIN workout_performance wpr ON wpr.exercise_id = e.exercise_id
     WHERE wpl.user_id = ?
     ORDER BY wpr.perf_date
-    ;`;
+    ;`; */
+
+    const query = `
+        SELECT u.user_id, u.fname, u.lname, wpr.perf_id, e.exercise_name, 
+        wpr.actual_sets, wpr.actual_reps, wpr.actual_weight, wpr.perf_date
+        FROM users u
+        JOIN workout_performance wpr ON wpr.user_id = u.user_id
+        JOIN exercises e ON wpr.exercise_id = e.exercise_id
+        WHERE u.user_id = ?
+        ORDER BY wpr.perf_date;`;
+
+
     // Execute the SQL query and retrieve the user's workout history. The user_id is passed as a parameter to filter the data.
     return await db.all(query, [user_id]);
 }

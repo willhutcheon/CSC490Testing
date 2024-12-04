@@ -157,9 +157,13 @@ async function createInjury(params) {
  */
 async function createWorkoutPerformance(params) {
     // SQL query to insert a new workout performance record into the `workout_performance` table
-    let sql = `
+    /* let sql = `
        INSERT INTO workout_performance (perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date)
         VALUES (?, ?, ?, ?, ?, ?);
+    `; */
+    let sql = `
+       INSERT INTO workout_performance (perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
     `;
     // Executes the SQL query with the provided parameters and returns the result of the insertion
     return await db.run(sql, params);
@@ -176,9 +180,14 @@ async function createWorkoutPerformance(params) {
  */
 async function updateWorkoutPerfromance(params) {
     // SQL query to update an existing workout performance record in the `workout_performance` table
-    let sql = `
+    /* let sql = `
         UPDATE users
         SET actual_sets = ?, actual_reps = ?, actual_weight = ?, perf_date = ?
+        WHERE perf_id = ?;
+    `; */
+    let sql = `
+        UPDATE users
+        SET actual_sets = ?, actual_reps = ?, actual_weight = ?, perf_date = ?, user_id = ?
         WHERE perf_id = ?;
     `;
     // Executes the SQL query with the provided parameters and returns the result of the update
