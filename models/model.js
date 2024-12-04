@@ -55,12 +55,22 @@ async function getUserPreferences(userId) {
  *                       for the matched record, or `null` if no record exists with the provided username.
  */
 async function getLogin(username) {
-    // SQL query to fetch the `username` and `password` for a specific user based on the provided `username`
-    let sql = "SELECT username, password FROM users WHERE username = ?;";
-    // Executes the SQL query and returns the result as a promise
-    // The query will fetch the username and password from the `users` table
-    return await db.get(sql);
+    const sql = "SELECT username, password, user_id AS id FROM users WHERE username = ?;";
+    console.log("Executing SQL:", sql, "with parameter:", username); // Debug log
+
+    // Wrap the query execution in a try-catch block
+    try {
+        const result = await db.get(sql, [username]); // Execute query
+        console.log("Query Result:", result); // Log the raw result from db.get
+        return result; // Return the fetched result
+    } catch (error) {
+        console.error("Database Query Error:", error); // Log any SQL execution errors
+        throw error; // Re-throw the error for higher-level handling
+    }
 }
+
+
+
 
 /**
  * Retrieves the details of a workout plan, including its workouts and exercises.

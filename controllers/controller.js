@@ -99,33 +99,40 @@ async function getRecommendedPlans(req, res, next) {
  * @param {Object} req - The request object containing the username and password in the body.
  * @param {Object} res - The response object used to send data back to the client.
  */
-async function getLogin(req,res){
-    try {
-        // Extract the username and password from the request body.
-        const { username, password } = req.body;
-        // Fetch user data based on the provided username from the model.
-        const results = await model.getLogin(username);
-        // If an error occurs during the database query, it will be caught in the catch block.
-    } catch (error) {
-        // If there is an error in fetching user data, send a 500 status with an error message.
-        res.status(500).send({ error: "Failed to fetch user data" });;
+async function getLogin(req, res) {
+    console.log("Request Body:", req.body); // Debug log
+
+    const { username, password } = req.body;
+
+    // Check if both username and password are present
+    if (!username || !password) {
+        return res.status(400).send({ success: false, message: "Username or password missing" });
     }
-    // Check if no user was found with the provided username (results is empty).
-    if (results.length === 0){
-        // If no matching user is found, return a 400 status with a failure message.
-        return res.status(400).send({ success: false, message: 'Invalid username or password' });
-    } else {
-        // If a user is found, check if the provided password matches the stored password.
-        const user = results[0];
-        if (password === user.password){
-            // If the password matches, return a 200 status indicating a successful login.
-            return res.status(200).send({success: true, message: "Login successful"})
-        } else {
-            // If the password does not match, return a 400 status with a failure message.
-            return res.status(400).send({ success: false, message: 'Invalid username or password' });
+
+    try {
+        // Call model.getLogin with the username
+        const user = await model.getLogin(username); // Directly get the user object
+        console.log("Fetched User:", user); // Debug log to confirm the user is fetched
+
+        if (!user) {
+            return res.status(400).send({ success: false, message: "Invalid username or password" });
         }
+
+        if (password === user.password) {
+            return res.status(200).send({
+                success: true,
+                userId: user.id,
+                message: "Login successful",
+            });
+        } else {
+            return res.status(400).send({ success: false, message: "Invalid username or password" });
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+        return res.status(500).send({ error: "Failed to process login" });
     }
 }
+
 
 /**
  * Handles a request to retrieve user data based on the provided user_id.
