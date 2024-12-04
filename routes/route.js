@@ -13,7 +13,7 @@ router.post("/feedback", controller.submitPlanFeedback);
 // Route for muscles to see if muscles are posted
 router.get("/allmuscles",controller.getAllMuscles);
 router.get("/userprofile/:user_id",controller.getUser);
-router.get("/login",controller.getLogin);
+router.post("/login",controller.getLogin);
 router.post('/users/create', crudController.createUser);
 router.get('/users/:user_id', crudController.getUser);
 router.post('/users/update/:user_id', crudController.updateUser);
