@@ -1,4 +1,3 @@
-
 // "use strict";
 const db = require("../models/db-conn");
 
@@ -13,7 +12,7 @@ const db = require("../models/db-conn");
  */
 async function getAllUsers() {
     // SQL query to select all records from the `users` table
-    let sql = "SELECT * FROM users;";
+    let sql = `SELECT * FROM users;`;
     // Executes the SQL query to retrieve all user records and returns the result as a promise
     return await db.all(sql);
 }
@@ -55,9 +54,8 @@ async function getUserPreferences(userId) {
  *                       for the matched record, or `null` if no record exists with the provided username.
  */
 async function getLogin(username) {
-    const sql = "SELECT username, password, user_id AS id FROM users WHERE username = ?;";
+    const sql = `SELECT username, password, user_id AS id FROM users WHERE username = ?;`;
     console.log("Executing SQL:", sql, "with parameter:", username); // Debug log
-
     // Wrap the query execution in a try-catch block
     try {
         const result = await db.get(sql, [username]); // Execute query
@@ -88,14 +86,14 @@ async function getWorkoutPlanDetails(planId) {
     console.log("getWorkoutPlanDetails called");
     // SQL query to fetch the details of a workout plan, including its workouts and exercises
     const sql = `
-    SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
+        SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, 
            w.workout_id, e.exercise_id, e.api_id, e.plan_sets, 
            e.plan_reps, e.plan_weight, e.rest_time, 
            e.exercise_name, e.duration, w.intensity
-    FROM workout_plans wp
+        FROM workout_plans wp
         JOIN workouts w ON wp.plan_id = w.plan_id
         JOIN exercises e ON w.workout_id = e.workout_id
-    WHERE wp.plan_id = ? AND wp.active = true;
+        WHERE wp.plan_id = ? AND wp.active = true;
     `;
     try {
         // Executes the SQL query and retrieves all matching results
@@ -180,18 +178,19 @@ async function getWorkoutPlans(userId) {
 
     console.log("getWorkoutPlans called");
     // COLLINS MUSCLE FILTERING
-    const sql = `SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*
-    FROM users u
-    JOIN workout_plans wp ON wp.user_id = u.user_id
-    JOIN workouts w ON wp.plan_id = w.plan_id
-    JOIN exercises e ON w.workout_id = e.workout_id
-    JOIN muscle_workout mw ON w.workout_id = mw.workout_id 
-    JOIN muscle m ON m.muscle_id = mw.muscle_id
-    LEFT JOIN user_injury ui ON ui.muscle_id = m.muscle_id AND ui.user_id = u.user_id
-    WHERE wp.user_id = ? 
-    AND wp.active = true 
-    AND (ui.injury_intensity IS NULL OR ui.injury_intensity <> 'severe')
-    GROUP BY w.workout_id;
+    const sql = `
+        SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active, w.*
+        FROM users u
+        JOIN workout_plans wp ON wp.user_id = u.user_id
+        JOIN workouts w ON wp.plan_id = w.plan_id
+        JOIN exercises e ON w.workout_id = e.workout_id
+        JOIN muscle_workout mw ON w.workout_id = mw.workout_id 
+        JOIN muscle m ON m.muscle_id = mw.muscle_id
+        LEFT JOIN user_injury ui ON ui.muscle_id = m.muscle_id AND ui.user_id = u.user_id
+        WHERE wp.user_id = ? 
+        AND wp.active = true 
+        AND (ui.injury_intensity IS NULL OR ui.injury_intensity <> 'severe')
+        GROUP BY w.workout_id;
     `;
     // Execute the SQL query and retrieve all matching rows for the given userId
     const rows = await db.all(sql, [userId]);
@@ -780,11 +779,11 @@ async function injuryFilter(userId) {
     const sql = `
         SELECT wp.*
         FROM workout_plans wp
-            JOIN workouts w ON wp.plan_id = w.plan_id
-            JOIN exercises e ON w.workout_id = e.workout_id
-            LEFT JOIN muscle_workout mw ON w.workout_id = mw.workout_id
-            LEFT JOIN user_injury ui ON mw.muscle_id = ui.muscle_id
-            WHERE wp.user_id = ? AND ( wp.active = true AND ui.injury_intensity <> 'severe')
+        JOIN workouts w ON wp.plan_id = w.plan_id
+        JOIN exercises e ON w.workout_id = e.workout_id
+        LEFT JOIN muscle_workout mw ON w.workout_id = mw.workout_id
+        LEFT JOIN user_injury ui ON mw.muscle_id = ui.muscle_id
+        WHERE wp.user_id = ? AND ( wp.active = true AND ui.injury_intensity <> 'severe')
     `;
     // Execute the SQL query and return the result, which is a promise that resolves to the filtered workout plan(s).
     return await db.get(sql, [userId]);
@@ -830,7 +829,7 @@ async function recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId
  */
 async function getAllMuscles() {
     // SQL query to select all columns from the 'muscle' table
-    let sql = "SELECT * FROM muscle;";
+    let sql = `SELECT * FROM muscle;`;
     // Execute the query and return the result as a promise.
     return await db.all(sql);
 }
@@ -851,12 +850,13 @@ async function filterInjuries(workoutPlans, userID) {
  */
 async function getUser(user_id) {
     // SQL query to retrieve user details along with related injury and muscle data
-    let sql = `SELECT u.user_id,u.fname,u.lname,u.username,u.password,u.email,u.fit_goal,u.exp_level,u.created_at,ui.muscle_id,m.muscle_name,m.muscle_position, ui.injury_intensity
-   FROM users u
-       LEFT JOIN user_injury  ui ON ui.user_id = u.user_id
-       LEFT JOIN muscle m ON ui.muscle_id = m.muscle_id
-       WHERE u.user_id = ?
-    ;`;
+    let sql = `
+        SELECT u.user_id,u.fname,u.lname,u.username,u.password,u.email,u.fit_goal,u.exp_level,u.created_at,ui.muscle_id,m.muscle_name,m.muscle_position, ui.injury_intensity
+        FROM users u
+        LEFT JOIN user_injury  ui ON ui.user_id = u.user_id
+        LEFT JOIN muscle m ON ui.muscle_id = m.muscle_id
+        WHERE u.user_id = ?;
+    `;
     // Execute the query and return the result as a promise
     return await db.all(sql, [user_id]);
 }
@@ -923,7 +923,8 @@ async function getWorkoutPerformance(userId) {
         SELECT e.exercise_name, e.plan_reps, wp.actual_reps, e.plan_sets, wp.actual_sets, e.plan_weight, wp.actual_weight
         FROM workout_performance wp
         JOIN exercises e ON wp.exercise_id = e.exercise_id
-        WHERE wp.user_id = ?;`;
+        WHERE wp.user_id = ?;
+    `;
 
     // Execute the SQL query and retrieve the data from the database. The userId is passed as a parameter to filter the data.
     return await db.get(sql, [userId]);
@@ -955,7 +956,8 @@ async function getUserHistory(user_id){
         JOIN workout_performance wpr ON wpr.user_id = u.user_id
         JOIN exercises e ON wpr.exercise_id = e.exercise_id
         WHERE u.user_id = ?
-        ORDER BY wpr.perf_date;`;
+        ORDER BY wpr.perf_date;
+    `;
 
 
     // Execute the SQL query and retrieve the user's workout history. The user_id is passed as a parameter to filter the data.

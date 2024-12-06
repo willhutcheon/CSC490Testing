@@ -163,7 +163,7 @@ async function createWorkoutPerformance(params) {
     `; */
 
     let sql = `
-       INSERT INTO workout_performance (perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date, user_id)
+        INSERT INTO workout_performance (perf_id, exercise_id, actual_sets, actual_reps, actual_weight, perf_date, user_id)
         VALUES (?, ?, ?, ?, ?, ?, ?);
     `;
 
@@ -193,7 +193,7 @@ async function updateWorkoutPerfromance(params) {
         SET actual_sets = ?, actual_reps = ?, actual_weight = ?, perf_date = ?, user_id = ?
         WHERE perf_id = ?;
     `;
-    
+
     // Executes the SQL query with the provided parameters and returns the result of the update
     return await db.run(sql, params);
 }
