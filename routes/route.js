@@ -8,6 +8,7 @@ const crudController = require("../controllers/crudcontroller");
 router.get("/allusers", controller.getAllUsers);
 // Route to get workout plan recommendations using reinforcement learning
 router.get("/recommendations", controller.getRecommendedPlans);
+// http://localhost:3000/recommendations?user_id=3601
 // Route to submit feedback for a workout plan
 router.post("/feedback", controller.submitPlanFeedback);
 // Route for muscles to see if muscles are posted
